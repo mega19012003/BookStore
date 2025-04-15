@@ -18,5 +18,9 @@ namespace WebBookStore.Models
         [DisplayName("Hình ảnh")]
         [StringLength(1024)]
         public string? Cover { get; set; }
+
+        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+
+        public bool IsDeleted { get; set; } = false; //Soft Delete
     }
 }

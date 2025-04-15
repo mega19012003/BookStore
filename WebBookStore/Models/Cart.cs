@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static WebBookStore.Models.Books;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebBookStore.Models
@@ -10,7 +9,7 @@ namespace WebBookStore.Models
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public virtual User User { get; set; }
 
         [Required]
@@ -29,4 +28,4 @@ namespace WebBookStore.Models
 
     }
 }
-}
+

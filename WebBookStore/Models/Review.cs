@@ -1,5 +1,4 @@
-﻿using static WebBookStore.Models.Books;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebBookStore.Models
@@ -10,8 +9,8 @@ namespace WebBookStore.Models
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; }
-        public virtual User User { get; set; }
+        public int UserId { get; set; }
+        public virtual UserVM User { get; set; }
 
         [Required]
         public int BookId { get; set; }
@@ -23,7 +22,9 @@ namespace WebBookStore.Models
         [StringLength(1000)]
         public string? Comment { get; set; } 
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now; 
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public bool IsDeleted { get; set; } = false; //Soft Delete
 
     }
 }

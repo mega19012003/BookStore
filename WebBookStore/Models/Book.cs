@@ -6,26 +6,24 @@ using WebBookStore.Components;
 
 namespace WebBookStore.Models
 {
-    public class Books
+    public class Book
     {
-        public class Book
-        {
             [Key]
             [Required]
             public int Id { get; set; }  
             public string ProductCode { get; set; } //Mã sp cho người dùng xem
             [DisplayName("Tác giả")]
 
-            public string AuthorId { get; set; }  
-            public Author Authors { get; set; } 
+            public int AuthorId { get; set; }  
+            public Author Author { get; set; } 
             [DisplayName("Thể loại")]
 
-            public string CategoryId { get; set; }
-            public Category Categories{ get; set; }
+            public int CategoryId { get; set; }
+            public Category Category { get; set; }
 
             [DisplayName("Nhà xuất bản")]
-            public string PublisherId { get; set; }
-            public Publisher Publishers { get; set; }
+            public int PublisherId { get; set; }
+            public Publisher Publisher { get; set; }
 
             [DisplayName("Đánh giá")]
             public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
@@ -59,7 +57,6 @@ namespace WebBookStore.Models
             [StringLength(1024)]
             public string Cover { get; set; }
             public ICollection<Image> Images { get; set; }
-        }
 
     }
 }

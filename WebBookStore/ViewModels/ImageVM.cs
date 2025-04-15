@@ -1,19 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static WebBookStore.Models.Book;
 
-namespace WebBookStore.Models
+namespace WebBookStore.ViewModels
 {
-    public class Image
+    public class ImageVM
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
-        [Required]
         public string ImageUrl { get; set; }  
-
-        public int BookId { get; set; }  
-        public Book Book { get; set; }  
-
+        public string BookName { get; set; }  
         public int DisplayOrder { get; set; }  // Thứ tự hiển thị ảnh (nếu có)
 
     }
