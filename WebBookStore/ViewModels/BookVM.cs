@@ -24,7 +24,7 @@ namespace WebBookStore.ViewModels
             public string? Description { get; set; } 
 
             ////////////////////////////////////////////////////////////////////
-            public string Cover { get; set; }
+            public string CoverUrl { get; set; }
             public ICollection<ImageVM> Images { get; set; }
 
     }

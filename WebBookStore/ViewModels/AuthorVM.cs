@@ -7,6 +7,6 @@ namespace WebBookStore.ViewModels
     {
         public string Name { get; set; }
         public string? Biography { get; set; }
-        public string Avatar { get; set; }
+        public string AvatarUrl { get; set; }
     }
 }

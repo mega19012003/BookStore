@@ -1,15 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static WebBookStore.Models.Book;
+using WebBookStore.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebBookStore.ViewModels
 {
     public class CartVM
     {
-        public string UserName { get; set; }
+        public string BookCover { get; set; }
         public string BookName { get; set; }
-        public int Quantity { get; set; } = 1;
-        public decimal UnitPrice { get; set; } // Giá tại thời điểm thêm vào giỏ (tránh thay đổi sau này)
+        public string AuthorName { get; set; }
+        public string PublisherName { get; set; }
+        public decimal UnitPrice { get; set; }
+        public int Amount { get; set; }
+        public decimal ThanhTien => Amount * UnitPrice;
 
     }
 }

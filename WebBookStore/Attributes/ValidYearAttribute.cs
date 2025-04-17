@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebBookStore.Components
+namespace WebBookStore.Attributes
 {
     public class ValidYearAttribute : ValidationAttribute
     {

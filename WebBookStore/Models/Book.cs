@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using WebBookStore.Components;
+using WebBookStore.Attributes;
 
 namespace WebBookStore.Models
 {
@@ -55,7 +55,7 @@ namespace WebBookStore.Models
             [Required]
             [DisplayName("Hình ảnh")]
             [StringLength(1024)]
-            public string Cover { get; set; }
+            public string CoverUrl { get; set; }
             public ICollection<Image> Images { get; set; }
 
     }

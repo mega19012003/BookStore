@@ -21,7 +21,7 @@ namespace WebBookStore.Models
         [Required]
         [DisplayName("Hình ảnh")]
         [StringLength(1024)]
-        public string Avatar { get; set; }
+        public string AvatarUrl { get; set; }
 
         public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 
