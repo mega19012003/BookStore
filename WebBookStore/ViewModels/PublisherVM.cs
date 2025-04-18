@@ -6,6 +6,6 @@ namespace WebBookStore.ViewModels
     public class PublisherVM
     {
         public string Name { get; set; }
-        public string? Cover { get; set; }
+        //public string? Cover { get; set; }
     }
 }

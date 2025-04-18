@@ -3,7 +3,7 @@ using WebBookStore.Models;
 
 namespace WebBookStore.Repositories
 {
-    public class EFBookRepository
+    public class EFBookRepository : IBookRepository
     {
         private readonly BookDbContext _context;
         public EFBookRepository(BookDbContext context)
@@ -67,8 +67,17 @@ namespace WebBookStore.Repositories
         }
         public async Task AddBookAsync(Book book)
         {
-            await _context.Books.AddAsync(book);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Books.AddAsync(book);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi chi tiết vào file log
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
         }
         public async Task UpdateBookAsync(Book book)
         {

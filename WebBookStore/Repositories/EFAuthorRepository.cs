@@ -3,7 +3,7 @@ using WebBookStore.Models;
 
 namespace WebBookStore.Repositories
 {
-    public class EFAuthorRepository
+    public class EFAuthorRepository : IAuthorRepository
     {
         private readonly BookDbContext _context;
         public EFAuthorRepository(BookDbContext context)

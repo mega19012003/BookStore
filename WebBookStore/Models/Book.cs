@@ -10,7 +10,7 @@ namespace WebBookStore.Models
     {
             [Key]
             [Required]
-            public int Id { get; set; }  
+            public int Id { get; set; }
             public string ProductCode { get; set; } //Mã sp cho người dùng xem
             [DisplayName("Tác giả")]
 
@@ -37,7 +37,7 @@ namespace WebBookStore.Models
             [Range(10000, 500000000, ErrorMessage = "Giá tiền phải nằm trong khoảng 10.000 - 50.000.000")]
             [DisplayName("Giá tiền")]
             public decimal Price { get; set; }
-            [Range(5, 80, ErrorMessage = "% số tiền giảm phải nằm từ 5% - 80%")]
+            [Range(0, 80, ErrorMessage = "% số tiền giảm phải nằm từ 5% - 80%")]
             [DisplayName("Giảm giá")]
             public decimal? DiscountPrice { get; set; }
             [DisplayName("Năm phát hành")]
@@ -52,11 +52,10 @@ namespace WebBookStore.Models
             public bool OutOfStock { get; set; } = false;
 
             ////////////////////////////////////////////////////////////////////
-            [Required]
             [DisplayName("Hình ảnh")]
             [StringLength(1024)]
             public string CoverUrl { get; set; }
-            public ICollection<Image> Images { get; set; }
+            //public ICollection<Image>? Images { get; set; } //= new List<Image>();
 
     }
 }

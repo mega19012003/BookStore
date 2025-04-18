@@ -14,10 +14,10 @@ namespace WebBookStore.Models
         [StringLength(100, ErrorMessage = "Tên nhà xuất bản không được vượt quá 100 ký tự.")]
         public string Name { get; set; }
 
-        [Required]
+        /*[Required]
         [DisplayName("Hình ảnh")]
         [StringLength(1024)]
-        public string? CoverUrl { get; set; }
+        public string? CoverUrl { get; set; }*/
 
         public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 

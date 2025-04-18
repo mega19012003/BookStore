@@ -23,7 +23,7 @@ namespace WebBookStore.Controllers
             return View(categories);
         }
 
-        // GET: CategoryController/Details/5
+        /*// GET: CategoryController/Details/5
         [HttpGet]
         public async Task<ActionResult> Details(int id)
         {
@@ -33,10 +33,10 @@ namespace WebBookStore.Controllers
                 return NotFound();
             }
             return View(category);
-        }
+        }*/
 
         // GET: CategoryController/Create
-        [HttpPost]
+        [HttpGet]
         public ActionResult Create()
         {
             return View();

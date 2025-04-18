@@ -1,0 +1,8 @@
+﻿@model Author
+<h2>Xác nhận xóa tác giả</h2>
+<p>Bạn có chắc chắn muốn ẩn tác giả <strong>@Model.Name</strong> không?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa mềm</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

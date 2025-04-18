@@ -9,11 +9,11 @@ namespace WebBookStore.ViewComponents
     {
         public IViewComponentResult Invoke()
         {
-            var cart = HttpContext.Session.Get < List<CartItem>>(CartKey.CART_KEY) ?? new List<CartItem>();
+            var cart = HttpContext.Session.Get < List<CartVM>>(CartKey.CART_KEY) ?? new List<CartVM>();
             
             return View("CartPanel", new CartModel
             {
-                quantity = cart.Sum(p => p.SoLuong),
+                quantity = cart.Sum(p => p.Amount),
                 total = cart.Sum(p => p.ThanhTien)
             });
         }

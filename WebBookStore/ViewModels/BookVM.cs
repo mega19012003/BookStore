@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using WebBookStore.Components;
+using WebBookStore.Attributes;
 using WebBookStore.Models;
 
 namespace WebBookStore.ViewModels
@@ -25,7 +25,7 @@ namespace WebBookStore.ViewModels
 
             ////////////////////////////////////////////////////////////////////
             public string CoverUrl { get; set; }
-            public ICollection<ImageVM> Images { get; set; }
+            //public ICollection<ImageVM> Images { get; set; }
 
     }
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using WEBAGAIN.Data;
-using WEBAGAIN.ViewModels;
+//using WebBookStore.Data;
+using WebBookStore.ViewModels;
 
-namespace WEBAGAIN.ViewComponents
+namespace WebBookStore.ViewComponents
 {
-    public class MenuGenresViewComponent : ViewComponent
+    /*public class MenuGenresViewComponent : ViewComponent
     {
         private readonly GameConsoleContext db;
 
@@ -22,5 +22,5 @@ namespace WEBAGAIN.ViewComponents
 
             return View(data);
         }
-    }
+    }*/
 }

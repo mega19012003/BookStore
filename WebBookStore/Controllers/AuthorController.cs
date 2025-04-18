@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebBookStore.Models;
 using WebBookStore.Repositories;
 using WebBookStore.ViewModels;
@@ -23,6 +24,10 @@ namespace WebBookStore.Controllers
         {
             var author = await _authorRepository.GetAllAuthorsAsync();
             return View(author);
+            /*var authors = await _authorRepository.GetAllAuthorsAsync();
+            var activeAuthors = authors.Where(a => !a.IsDeleted).ToList(); // Lọc các tác giả chưa bị xóa mềm
+
+            return View(activeAuthors);*/
         }
 
         // GET: AuthorController/Details/5
@@ -37,110 +42,114 @@ namespace WebBookStore.Controllers
             return View(author);
         }
 
-        // GET: AuthorController/Create
-        [HttpPost]
-        public ActionResult Create()
+        // GET: Author/Create
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
 
-        // POST: AuthorController/Create
+        // POST: Author/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Author author, IFormFile image)
+        public async Task<IActionResult> Create(Author author, IFormFile image)
         {
-            if (ModelState.IsValid)
+            if (image == null || image.Length == 0)
             {
-                try
-                {
-                    if (image != null && image.Length > 0)
-                    {
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "authors", fileName);
-
-                        // Lưu ảnh vào thư mục
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(fileStream);
-                        }
-
-                        // Cập nhật đường dẫn ảnh trong đối tượng Author
-                        author.AvatarUrl = "/images/authors/" + fileName;
-                    }
-
-                    await _authorRepository.AddAuthorAsync(author);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError("", "Có lỗi khi thêm tác giả.");
-                    return View(author);
-                }
+                ViewBag.ImageError = "Vui lòng chọn hình ảnh.";
+                return View(author);
             }
-            return View(author);
+
+            // Tạo thư mục lưu ảnh nếu chưa có
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/authors");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // Tạo tên file duy nhất
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Lưu ảnh vào thư mục
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            // Gán đường dẫn ảnh cho Author (để hiển thị sau này)
+            author.AvatarUrl = "/images/authors/" + uniqueFileName;
+
+            // Thêm vào database
+            await _authorRepository.AddAuthorAsync(author);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: AuthorController/Edit/5
-        public async Task<ActionResult> Edit(int id)
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
             var author = await _authorRepository.GetAuthorByIdAsync(id);
-            if (author == null)
-            {
-                return NotFound();
-            }
+            if (author == null) return NotFound();
             return View(author);
         }
 
-        // POST: AuthorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Author author, IFormFile image)
+        public async Task<IActionResult> Edit(int id, IFormFile image)
         {
-            if (ModelState.IsValid)
+            // 1) Lấy bản ghi gốc
+            var authorToUpdate = await _authorRepository.GetAuthorByIdAsync(id);
+            if (authorToUpdate == null) return NotFound();
+
+            // 2) Cập nhật các field text (Name, Biography) từ form
+            if (await TryUpdateModelAsync(authorToUpdate, "",
+                    a => a.Name,
+                    a => a.Biography))
             {
-                try
+                // 3) Nếu có ảnh mới thì xử lý upload
+                if (image != null && image.Length > 0)
                 {
-                    if (image != null && image.Length > 0)
+                    // Xóa ảnh cũ
+                    if (!string.IsNullOrEmpty(authorToUpdate.AvatarUrl))
                     {
-                        // Tạo tên file duy nhất cho ảnh
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                        var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "authors", fileName);
-
-                        // Lưu ảnh vào thư mục
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await image.CopyToAsync(fileStream);
-                        }
-
-                        // Cập nhật đường dẫn ảnh trong đối tượng Author
-                        author.AvatarUrl = "/images/authors/" + fileName;
+                        var oldPath = Path.Combine(_webHostEnvironment.WebRootPath,
+                            authorToUpdate.AvatarUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
                     }
 
-                    await _authorRepository.UpdateAuthorAsync(author);
-                    return RedirectToAction(nameof(Index));
+                    // Lưu ảnh mới
+                    var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "images", "authors");
+                    Directory.CreateDirectory(uploads); // nếu chưa tồn tại
+                    var fullPath = Path.Combine(uploads, fileName);
+                    using (var fs = new FileStream(fullPath, FileMode.Create))
+                        await image.CopyToAsync(fs);
+
+                    authorToUpdate.AvatarUrl = "/images/authors/" + fileName;
                 }
-                catch (Exception)
-                {
-                    ModelState.AddModelError("", "Có lỗi khi cập nhật tác giả.");
-                    return View(author);
-                }
+
+                // 4) Lưu thay đổi
+                await _authorRepository.UpdateAuthorAsync(authorToUpdate);
+                return RedirectToAction(nameof(Index));
             }
-            return View(author);
+
+            // Nếu model binding thất bại, trả lại view với authorToUpdate để giữ nguyên dữ liệu
+            return View(authorToUpdate);
         }
 
-        // GET: AuthorController/Delete/5
+
+        // GET
         [HttpGet]
         public async Task<ActionResult> Delete(int id)
         {
             var author = await _authorRepository.GetAuthorByIdAsync(id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-            return View(author);
+            if (author == null) return NotFound();
+            return View(author); // sẽ load Views/Author/Delete.cshtml
         }
 
-        // POST: AuthorController/Delete/5
+        // POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
@@ -150,10 +159,11 @@ namespace WebBookStore.Controllers
                 await _authorRepository.DeleteAuthorAsync(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch
             {
                 ModelState.AddModelError("", "Có lỗi khi xóa tác giả.");
-                return View();
+                var author = await _authorRepository.GetAuthorByIdAsync(id);
+                return View(author);
             }
         }
     }

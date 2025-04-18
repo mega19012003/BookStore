@@ -3,6 +3,6 @@
     public class CartModel
     {
         public int quantity { get; set; }
-        public double total { get; set; }
+        public decimal total { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using WebBookStore.Models;
 
 namespace WebBookStore.Repositories
 {
-    public class EFCategoryRepository
+    public class EFCategoryRepository : ICategoryRepository
     {
         private readonly BookDbContext _context;
         public EFCategoryRepository(BookDbContext context)

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Author>
+
+<h2>Danh sách tác giả</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên tác giả</th>
+            <th>Tiểu sử</th>
+            <th>Hình ảnh</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model)
+        {
+            <tr>
+                <td>
+                    @if (author.IsDeleted)
+                    {
+                        <span class="text-danger">@author.Name (đã xóa mềm)</span>
+                    }
+                    else
+                    {
+                        <span>@author.Name</span>
+                    }
+                </td>
+                <td>@author.Biography</td>
+                <td><img src="@author.AvatarUrl" alt="@author.Name" width="50" /></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@author.Id" class="btn btn-info btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@author.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

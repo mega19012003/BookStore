@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using WebBookStore.Models;
 using WebBookStore.Repositories;
+using WebBookStore.ViewModels;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace WebBookStore.Controllers
 {
@@ -27,63 +31,73 @@ namespace WebBookStore.Controllers
         {
             var books = await _bookRepository.GetAllBooksAsync();
             return View(books);
+            /* var books = await _bookRepository.GetAllBooksAsync();
+            return View(books.Where(b => !b.IsDeleted));*/
         }
 
         // GET: Book/Create
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Authors = await _authorRepository.GetAllAuthorsAsync();
-            ViewBag.Categories = await _categoryRepository.GetAllCategoriesAsync();
-            ViewBag.Publishers = await _publisherRepository.GetAllPublishersAsync();
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
+            var authors = await _authorRepository.GetAllAuthorsAsync();
+            ViewBag.Authors = new SelectList(authors, "Id", "Name");
+
+            var publishers = await _publisherRepository.GetAllPublishersAsync();
+            ViewBag.Publishers = new SelectList(publishers, "Id", "Name");
+
             return View();
         }
 
         // POST: Book/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Book book, IFormFile coverImage, List<IFormFile> galleryImages)
+        public async Task<IActionResult> Create(Book book, IFormFile image)
         {
-            if (!ModelState.IsValid)
+            if (image == null || image.Length == 0)
             {
+                ViewBag.ImageError = "Vui lòng chọn ảnh bìa.";
                 return View(book);
             }
 
-            if (coverImage != null && coverImage.Length > 0)
+            if (string.IsNullOrEmpty(book.ProductCode))
             {
-                var coverFileName = Guid.NewGuid().ToString() + Path.GetExtension(coverImage.FileName);
-                var coverPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books", coverFileName);
-
-                using (var stream = new FileStream(coverPath, FileMode.Create))
-                {
-                    await coverImage.CopyToAsync(stream);
-                }
-
-                book.CoverUrl = "/images/books/" + coverFileName;
+                book.ProductCode = GenerateProductCode();
             }
 
-            // xử lý nhiều ảnh
-            if (galleryImages != null && galleryImages.Any())
+            // Tạo thư mục lưu ảnh nếu chưa có
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/books");
+            if (!Directory.Exists(uploadsFolder))
             {
-                book.Images = new List<Image>();
-                foreach (var image in galleryImages)
-                {
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books", fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-
-                    book.Images.Add(new Image
-                    {
-                        ImageUrl = "/images/books/" + fileName
-                    });
-                }
+                Directory.CreateDirectory(uploadsFolder);
             }
+
+            // Tạo tên file duy nhất
+            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Lưu ảnh vào thư mục
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            book.CoverUrl = "/images/books/" + uniqueFileName;
+
+            // Thêm vào database
             await _bookRepository.AddBookAsync(book);
             return RedirectToAction(nameof(Index));
         }
+
+
+        // Hàm tạo mã sản phẩm tự động
+        private string GenerateProductCode()
+        {
+            return "P" + Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+        }
+
 
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int id)
@@ -99,9 +113,14 @@ namespace WebBookStore.Controllers
             var book = await _bookRepository.GetBookByIdAsync(id);
             if (book == null) return NotFound();
 
-            ViewBag.Authors = await _authorRepository.GetAllAuthorsAsync();
-            ViewBag.Categories = await _categoryRepository.GetAllCategoriesAsync();
-            ViewBag.Publishers = await _publisherRepository.GetAllPublishersAsync();
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
+            var authors = await _authorRepository.GetAllAuthorsAsync();
+            ViewBag.Authors = new SelectList(authors, "Id", "Name");
+
+            var publishers = await _publisherRepository.GetAllPublishersAsync();
+            ViewBag.Publishers = new SelectList(publishers, "Id", "Name");
 
             return View(book);
         }
@@ -109,50 +128,75 @@ namespace WebBookStore.Controllers
         // POST: Book/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Book book, IFormFile? newCoverImage, List<IFormFile>? newGalleryImages)
+        public async Task<IActionResult> Edit(int id, IFormFile image, [Bind("Id,Title,Price,DiscountPrice,PublishYear,Description,AuthorId,CategoryId,PublisherId,OutOfStock")] Book book)
         {
-            if (!ModelState.IsValid)
+            if (id != book.Id)
             {
-                return View(book);
+                return NotFound();
             }
 
-            // Update cover image if changed
-            if (newCoverImage != null && newCoverImage.Length > 0)
+            var bookToUpdate = await _bookRepository.GetBookByIdAsync(id);
+            if (bookToUpdate == null)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(newCoverImage.FileName);
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await newCoverImage.CopyToAsync(stream);
-                }
-
-                book.CoverUrl = "/images/books/" + fileName;
+                return NotFound();
             }
 
-            // Add new gallery images (có thể thêm hoặc không)
-            if (newGalleryImages != null && newGalleryImages.Any())
-            {
-                foreach (var image in newGalleryImages)
-                {
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books", fileName);
+            // Cập nhật các thông tin khác của book (trừ CoverUrl)
+            bookToUpdate.Title = book.Title;
+            bookToUpdate.Price = book.Price;
+            bookToUpdate.DiscountPrice = book.DiscountPrice;
+            bookToUpdate.PublishYear = book.PublishYear;
+            bookToUpdate.Description = book.Description;
+            bookToUpdate.AuthorId = book.AuthorId;
+            bookToUpdate.CategoryId = book.CategoryId;
+            bookToUpdate.PublisherId = book.PublisherId;
+            bookToUpdate.OutOfStock = book.OutOfStock;
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+            // Kiểm tra nếu có ảnh mới
+            if (image != null && image.Length > 0)
+            {
+                // Xóa ảnh cũ nếu có
+                if (!string.IsNullOrEmpty(bookToUpdate.CoverUrl))
+                {
+                    var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, bookToUpdate.CoverUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                    if (System.IO.File.Exists(oldPath))
                     {
-                        await image.CopyToAsync(stream);
+                        System.IO.File.Delete(oldPath);
                     }
-
-                    book.Images.Add(new Image
-                    {
-                        ImageUrl = "/images/books/" + fileName
-                    });
                 }
+
+                // Lưu ảnh mới
+                var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books");
+                Directory.CreateDirectory(uploads); // Tạo thư mục nếu chưa có
+
+                var fullPath = Path.Combine(uploads, fileName);
+                using (var fs = new FileStream(fullPath, FileMode.Create))
+                {
+                    await image.CopyToAsync(fs);
+                }
+
+                // Cập nhật CoverUrl trong book
+                bookToUpdate.CoverUrl = "/images/books/" + fileName;
             }
 
-            await _bookRepository.UpdateBookAsync(book);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _bookRepository.UpdateBookAsync(bookToUpdate);
+                return RedirectToAction(nameof(Index)); // Quay lại trang danh sách sách
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+            }
+
+            // Nếu đến đây, trả về lại view để chỉnh sửa
+            ViewBag.Authors = new SelectList(await _authorRepository.GetAllAuthorsAsync(), "Id", "Name", bookToUpdate.AuthorId);
+            ViewBag.Categories = new SelectList(await _categoryRepository.GetAllCategoriesAsync(), "Id", "Name", bookToUpdate.CategoryId);
+            ViewBag.Publishers = new SelectList(await _publisherRepository.GetAllPublishersAsync(), "Id", "Name", bookToUpdate.PublisherId);
+
+            return View(bookToUpdate); // Trả về view để chỉnh sửa nếu có lỗi
         }
+
 
         // GET: Book/Delete/5
         public async Task<IActionResult> Delete(int id)
@@ -167,7 +211,12 @@ namespace WebBookStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _bookRepository.DeleteBookAsync(id); 
+            var book = await _bookRepository.GetBookByIdAsync(id);
+            if (book != null)
+            {
+                book.IsDeleted = true;
+                await _bookRepository.UpdateBookAsync(book);
+            }
             return RedirectToAction(nameof(Index));
         }
     }

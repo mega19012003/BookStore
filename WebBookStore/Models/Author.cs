@@ -18,9 +18,7 @@ namespace WebBookStore.Models
         [StringLength(500, ErrorMessage = "Tiểu sử không được vượt quá 500 ký tự.")]
         public string? Biography { get; set; }
 
-        [Required]
         [DisplayName("Hình ảnh")]
-        [StringLength(1024)]
         public string AvatarUrl { get; set; }
 
         public virtual ICollection<Book> Books { get; set; } = new List<Book>();
