@@ -122,6 +122,10 @@ namespace WebBookStore.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                user.Name = Input.Name;
+                user.Address = Input.Address;
+                user.Birthday = Input.Birthday;
+                user.Gender = Input.Gender;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
