@@ -18,6 +18,14 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultTokenProviders()
     .AddDefaultUI()
     .AddEntityFrameworkStores<BookDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";         // Khi chưa đăng nhập mà truy cập vào trang cần xác thực
+    options.LogoutPath = "/Identity/Account/Logout";       // Khi người dùng thực hiện đăng xuất
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // Khi người dùng không có quyền truy cập
+});
+
 // Cấu hình Identity
 builder.Services.AddRazorPages();
 
@@ -111,8 +119,14 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.MapControllerRoute(
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(name: "Admin", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
+/*app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+*/
 app.Run();
