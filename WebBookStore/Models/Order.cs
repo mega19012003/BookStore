@@ -9,7 +9,7 @@
         public decimal TotalAmount { get; set; }
         public string Status { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual AppUser User { get; set; }
         public virtual Book Book { get; set; }
     }
 }

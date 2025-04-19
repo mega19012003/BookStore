@@ -10,7 +10,7 @@ namespace WebBookStore.Models
 
         [Required]
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual AppUser User { get; set; }
 
         [Required]
         public int BookId { get; set; }

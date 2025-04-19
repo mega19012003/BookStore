@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebBookStore.Models
 {
-    public class BookDbContext : DbContext
+    public class BookDbContext : IdentityDbContext<AppUser>
     {
         public BookDbContext(DbContextOptions<BookDbContext> options) : base(options)
         {
@@ -17,7 +18,7 @@ namespace WebBookStore.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<AppUser> Users { get; set; }
 
        /* protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
