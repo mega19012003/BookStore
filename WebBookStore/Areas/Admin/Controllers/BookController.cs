@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ using static System.Reflection.Metadata.BlobBuilder;
 
 namespace WebBookStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class BookController : Controller
     {
         private readonly IBookRepository _bookRepository;
@@ -100,12 +103,12 @@ namespace WebBookStore.Areas.Admin.Controllers
 
 
         // GET: Book/Details/5
-        public async Task<IActionResult> Details(int id)
+        /*public async Task<IActionResult> Details(int id)
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
             if (book == null) return NotFound();
             return View(book);
-        }
+        }*/
 
         // GET: Book/Edit/5
         public async Task<IActionResult> Edit(int id)

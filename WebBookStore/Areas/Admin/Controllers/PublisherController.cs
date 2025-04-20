@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebBookStore.Models;
 using WebBookStore.Repositories;
@@ -6,6 +7,8 @@ using WebBookStore.ViewModels;
 
 namespace WebBookStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class PublisherController : Controller
     {
         private readonly IPublisherRepository _publisherRepository;

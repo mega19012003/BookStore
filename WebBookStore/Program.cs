@@ -13,6 +13,7 @@ builder.Services.AddDbContext<BookDbContext>(options =>
 
 //builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<BookDbContext>();
 
+
 //identity
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultTokenProviders()
@@ -80,12 +81,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 var app = builder.Build();
 
 //seed data
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<BookDbContext>();
-    await SeedData.InitializeAsync(context);
-}*/
+    //var context = services.GetRequiredService<BookDbContext>();
+    //await SeedData.InitializeAsync(context);
+    await seed.SeedAdminAsync(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -108,7 +110,7 @@ if (!app.Environment.IsDevelopment())
     }*/
 
 
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
