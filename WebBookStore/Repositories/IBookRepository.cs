@@ -5,6 +5,8 @@ namespace WebBookStore.Repositories
     public interface IBookRepository
     {
         Task<IEnumerable<Book>> GetAllBooksAsync();
+        Task<List<Book>> GetNewestBooksAsync(int count);
+        Task<List<Book>> GetNewestBooksByCategoryAsync(int id, int count);
         Task<IEnumerable<Book>> GetAvailableBooksAsync();
         Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId);
         Task<IEnumerable<Book>> GetBooksByPublisherAsync(int authorId);

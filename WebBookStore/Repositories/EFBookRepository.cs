@@ -18,6 +18,16 @@ namespace WebBookStore.Repositories
                 .Include(p => p.Publisher)
                 .ToListAsync();
         }
+        public async Task<List<Book>> GetNewestBooksAsync(int count)
+        {
+            return await _context.Books
+                .Include(p => p.Category)
+                .Include(p => p.Author)
+                .Include(p => p.Publisher)
+                .OrderByDescending(b => b.Id)
+                .Take(count)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Book>> GetAvailableBooksAsync()
         {
             return await _context.Books
@@ -37,6 +47,17 @@ namespace WebBookStore.Repositories
                 .Include(p => p.Publisher)
                 .ToListAsync();
         }
+        public async Task<List<Book>> GetNewestBooksByCategoryAsync(int id, int count)
+        {
+            return await _context.Books
+                .Include(p => p.Category)
+                .Include(p => p.Author)
+                .Include(p => p.Publisher)
+                .Where(b => b.Category.Id == id)
+                .Take(count)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetBooksByPublisherAsync(int publisherId)
         {
             return await _context.Books

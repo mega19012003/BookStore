@@ -34,8 +34,19 @@ namespace WebBookStore.Controllers
             /* var books = await _bookRepository.GetAllBooksAsync();
             return View(books.Where(b => !b.IsDeleted));*/
         }
-
-        // GET: Book/Create
+        /*public async Task<IActionResult> NewestBook()
+        {
+            var books = await _bookRepository.GetNewestBooksAsync(12);
+            if (books == null || !books.Any())
+            {
+                // Log thêm thông tin để kiểm tra
+                Console.WriteLine("Không có sách trong database.");
+                return View("NoBooks");
+            }
+            // Truyền sách vào View
+            return View(books);  // Truyền trực tiếp Model vào View
+        }*/
+        /*// GET: Book/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -218,6 +229,6 @@ namespace WebBookStore.Controllers
                 await _bookRepository.UpdateBookAsync(book);
             }
             return RedirectToAction(nameof(Index));
-        }
+        }*/
     }
 }

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\publishers\**" />
+    <Content Remove="wwwroot\images\publishers\**" />
+    <EmbeddedResource Remove="wwwroot\images\publishers\**" />
+    <None Remove="wwwroot\images\publishers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
@@ -28,7 +35,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="wwwroot\images\books\" />
     <Folder Include="wwwroot\images\authors\" />
-    <Folder Include="wwwroot\images\publishers\" />
   </ItemGroup>
 
   <ItemGroup>
