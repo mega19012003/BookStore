@@ -28,6 +28,21 @@ namespace WebBookStore.Repositories
                 .Take(count)
                 .ToListAsync();
         }
+        public async Task<List<Book>> GetTopSellingBooksAsync(int count)
+        {
+            return await _context.Books
+                .OrderByDescending(b => b.soldQuantity)
+                .Take(count)
+                .Include(b => b.Category) // nếu cần hiển thị category
+                .ToListAsync();
+        }
+        public async Task<List<Book>> GetRandomBooksAsync(int count)
+        {
+            var allBooks = await _context.Books.Include(p=>p.Category).ToListAsync();
+            return allBooks.OrderBy(b => Guid.NewGuid())  // Sắp xếp ngẫu nhiên
+                           .Take(count)                  // Lấy 8 sách
+                           .ToList();
+        }
         public async Task<IEnumerable<Book>> GetAvailableBooksAsync()
         {
             return await _context.Books

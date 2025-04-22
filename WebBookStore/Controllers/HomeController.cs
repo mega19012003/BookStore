@@ -21,16 +21,20 @@ namespace WebBookStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            /*var books = await _bookRepository.GetNewestBooksAsync(12);
-            if (books == null || !books.Any())
+            var books = await _bookRepository.GetNewestBooksAsync(12);
+            /*if (books == null || !books.Any())
             {
                 // Log thêm thông tin để kiểm tra
                 _logger.LogWarning("Không có sách mới trong database.");
                 return View("NoBooks");
             }
-            // Truyền sách vào View
+            // Truyền sách vào View*/
             return View(books);  // Truyền trực tiếp Model vào View
-            //return View();*/
+            //return View();
+        }
+
+        public async Task<IActionResult> LoadCustomBooks()
+        {
             var allBooks = await _bookRepository.GetNewestBooksAsync(12);
 
             var vm = new HomePageBooksVM
@@ -45,18 +49,22 @@ namespace WebBookStore.Controllers
             return View(vm);
         }
 
-        public async Task<IActionResult> NewAdventureBook()
+        public async Task<IActionResult> TopSellingBooks()
         {
-            int adventureCategoryId = 3; // hoặc lấy từ DB/enum tùy bạn
-
-            var books = await _bookRepository.GetNewestBooksByCategoryAsync(adventureCategoryId, 3);
+            var books = await _bookRepository.GetTopSellingBooksAsync(12);
             if (books == null || !books.Any())
             {
-                _logger.LogWarning("Không có sách thể loại Adventure.");
+                _logger.LogWarning("Không có sách bán chạy.");
                 return View("NoBooks");
             }
 
-            return View(books);
+            return PartialView("_TopSellingBooksPartial", books);
+        }
+
+        public async Task<IActionResult> RandomBooks(int count = 1)
+        {
+            var books = await _bookRepository.GetRandomBooksAsync(count);
+            return View(books);  // Trả về view chứa danh sách sách ngẫu nhiên
         }
 
         public IActionResult Privacy()

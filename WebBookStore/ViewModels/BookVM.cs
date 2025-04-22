@@ -21,11 +21,15 @@ namespace WebBookStore.ViewModels
             public decimal? DiscountPrice { get; set; }
             public int PublishYear { get; set; }
             //public string? Translator { get; set; }  
-            public string? Description { get; set; } 
+            public string? Description { get; set; }
+            [Required]
+            [DisplayName("Số lượng tồn kho")]
+            public int Quantity { get; set; } = 1;
 
             ////////////////////////////////////////////////////////////////////
             public string CoverUrl { get; set; }
             //public ICollection<ImageVM> Images { get; set; }
+
 
     }
 }

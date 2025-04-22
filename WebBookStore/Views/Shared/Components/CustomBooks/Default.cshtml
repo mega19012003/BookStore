@@ -1,0 +1,19 @@
+﻿@model WebBookStore.ViewModels.HomePageBooksVM
+
+<div class="tab-content">
+    <div id="tab-1" class="tab-pane fade show p-0 active">
+        @await Html.PartialAsync("_BookListPartial", Model.AllBooks)
+    </div>
+    <div id="tab-2" class="tab-pane fade show p-0">
+        @await Html.PartialAsync("_BookListPartial", Model.AdventureBooks)
+    </div>
+    <div id="tab-3" class="tab-pane fade show p-0">
+        @await Html.PartialAsync("_BookListPartial", Model.FantasyBooks)
+    </div>
+    <div id="tab-4" class="tab-pane fade show p-0">
+        @await Html.PartialAsync("_BookListPartial", Model.RomanceBooks)
+    </div>
+    <div id="tab-5" class="tab-pane fade show p-0">
+        @await Html.PartialAsync("_BookListPartial", Model.HorrorBooks)
+    </div>
+</div>

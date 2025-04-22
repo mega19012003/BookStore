@@ -43,6 +43,12 @@ namespace WebBookStore.Models
             [DisplayName("Năm phát hành")]
             [ValidYearAttribute(ErrorMessage = "Năm xuất bản không hợp lệ. Năm phải từ khoảng 1300 - hiện tại")]
             public int PublishYear { get; set; }
+
+            [Required]
+            [DisplayName("Số lượng tồn kho")]
+            public int Quantity { get; set; } = 1; //Số lượng tồn kho
+            public int soldQuantity { get; set; } = 0; //Số lượng đã bán
+
             //public string? Translator { get; set; }  
             [DisplayName("Mô tả")]
             [DataType(DataType.MultilineText)]
