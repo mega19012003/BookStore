@@ -1,0 +1,58 @@
+﻿@model List<Book>
+
+<div>
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var book in Model)
+        {
+            <div class="d-flex align-items-start mb-4">
+                <!-- Ảnh bên trái -->
+                <div class="rounded" style="width: 100px; height: 180px; overflow: hidden;">
+                    <img src="@book.CoverUrl" class="img-fluid rounded" alt="@book.Title">
+                </div>
+
+                <!-- Thông tin bên phải -->
+                <div class="ms-3">
+                    <h6 class="mb-2 text-truncate" style="max-width: 200px;" title="@book.Title">
+                        @book.Title
+                    </h6>
+
+                    <div class="d-flex mb-2">
+                        <i class="fa fa-star text-secondary"></i>
+                        <i class="fa fa-star text-secondary"></i>
+                        <i class="fa fa-star text-secondary"></i>
+                        <i class="fa fa-star text-secondary"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+
+                    @* Nếu có giảm giá *@
+                    @if (book.DiscountPrice.HasValue && book.DiscountPrice.Value > 0)
+                    {
+                        <div class="mb-2">
+                            <span class="fs-5 fw-bold me-2">
+                                @book.FinalPrice.ToString("N0") VND
+                            </span>
+							<br />
+                            <span class="text-muted text-decoration-line-through">
+                                @book.Price.ToString("N0") VND
+                            </span>
+                            <span class="badge bg-danger ms-2">
+                                -@book.DiscountPrice.Value.ToString("0")%
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="fs-5 fw-bold mb-2">
+                            @book.Price.ToString("N0") VND
+                        </p>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Không có sách</p>
+    }
+</div>

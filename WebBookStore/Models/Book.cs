@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using WebBookStore.Attributes;
@@ -63,5 +64,10 @@ namespace WebBookStore.Models
             public string CoverUrl { get; set; }
             //public ICollection<Image>? Images { get; set; } //= new List<Image>();
 
+            [NotMapped]
+            public decimal FinalPrice
+            => DiscountPrice.HasValue
+            ? Price * (100 - DiscountPrice.Value) / 100
+            : Price;
     }
 }
