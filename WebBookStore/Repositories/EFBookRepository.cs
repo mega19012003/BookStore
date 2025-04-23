@@ -43,10 +43,18 @@ namespace WebBookStore.Repositories
                            .Take(count)                  // Lấy 8 sách
                            .ToList();
         }
+
+        public async Task<List<Book>> SearchBooksAsync(string keyword)
+        {
+            return await _context.Books
+                .Where(b => b.Title.Contains(keyword))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetAvailableBooksAsync()
         {
             return await _context.Books
-                .Where(p => p.IsDeleted == false && p.OutOfStock == false) // isDeleted = false
+                .Where(p => p.IsDeleted == false /*&& p.OutOfStock == false*/) // isDeleted = false
                 .Include(p => p.Category)
                 .Include(p => p.Author)
                 .Include(p => p.Publisher)

@@ -8,6 +8,7 @@ namespace WebBookStore.Repositories
         Task<List<Book>> GetNewestBooksAsync(int count);
         Task<List<Book>> GetTopSellingBooksAsync(int count);
         Task<List<Book>> GetRandomBooksAsync(int count);
+        Task<List<Book>> SearchBooksAsync(string keyword);
         Task<IEnumerable<Book>> GetAvailableBooksAsync();
         Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId);
         Task<IEnumerable<Book>> GetBooksByPublisherAsync(int authorId);

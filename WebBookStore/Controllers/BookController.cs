@@ -35,6 +35,18 @@ namespace WebBookStore.Controllers
             return View(books.Where(b => !b.IsDeleted));*/
         }
 
+        public async Task<IActionResult> Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var books = await _bookRepository.GetAllBooksAsync();
+            var results = books.Where(b => b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return View("SearchResults", results);
+        }
         /*// GET: Book/Create
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -104,7 +116,19 @@ namespace WebBookStore.Controllers
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
             if (book == null) return NotFound();
+
+            /*// Lấy các sách cùng category (ngoại trừ chính nó), random 4 cuốn
+            var relatedBooks = await _bookRepository.GetBooksByCategoryAsync(book.CategoryId);
+            var randomRelated = relatedBooks
+                .Where(b => b.Id != id)
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(4)
+                .ToList();
+
+            ViewBag.RelatedBooks = randomRelated;*/
+
             return View(book);
+
         }
         /*
         // GET: Book/Edit/5

@@ -8,13 +8,17 @@
             <div class="d-flex align-items-start mb-4">
                 <!-- Ảnh bên trái -->
                 <div class="rounded" style="width: 100px; height: 180px; overflow: hidden;">
-                    <img src="@book.CoverUrl" class="img-fluid rounded" alt="@book.Title">
+                    <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">
+                        <img src="@book.CoverUrl" class="img-fluid rounded" alt="@book.Title">
+                    </a>
                 </div>
 
                 <!-- Thông tin bên phải -->
                 <div class="ms-3">
                     <h6 class="mb-2 text-truncate" style="max-width: 200px;" title="@book.Title">
-                        @book.Title
+                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id">
+                            @book.Title
+                        </a>
                     </h6>
 
                     <div class="d-flex mb-2">
