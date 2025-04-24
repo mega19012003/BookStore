@@ -10,9 +10,11 @@ using WebBookStore.Repositories;
 
 namespace WebBookStore.Areas.Customer.Controllers
 {
-    [Authorize(Roles = "Customer")]
+    [Area("Customer")]
+    [Authorize]
     public class CartController : Controller
     {
+        private const string CartKey = "MYCART";
         private readonly BookDbContext _context;
 
         public CartController(BookDbContext context)
@@ -20,57 +22,85 @@ namespace WebBookStore.Areas.Customer.Controllers
             _context = context;
         }
 
-        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey.CART_KEY) ?? new List<CartItem>();
-   
+        private List<CartItem> Cart
+        {
+            get
+            {
+                var cartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>(CartKey);
+                return cartItems ?? new List<CartItem>();
+            }
+            set
+            {
+                HttpContext.Session.SetObjectAsJson(CartKey, value);
+            }
+        }
+
         public IActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            return View(Cart);
+            var cartItems = Cart;
+            return View(cartItems);
         }
-  
-        public IActionResult AddToCart(int id, int quantity = 1)
-        {
-            var cart = Cart;
 
-            var item = cart.FirstOrDefault(i => i.Book.Id == id);
-            if (item == null)
+        public IActionResult AddToCart(int id, int quantity)
+        {
+            var cartItems = Cart;
+            var existingItem = cartItems.FirstOrDefault(item => item.Book.Id == id);
+
+            if (existingItem == null)
             {
-                var book = _context.Books.FirstOrDefault(p => p.Id == id);
+                var book = _context.Books.Find(id);
                 if (book == null)
                 {
-                    return Redirect("/404");
+                    return NotFound();
                 }
 
-                item = new CartItem
+                var newItem = new CartItem
                 {
                     Book = book,
                     Quantity = quantity,
                     UnitPrice = book.FinalPrice
                 };
-                cart.Add(item);
+
+                cartItems.Add(newItem);
             }
             else
             {
-                item.Quantity += quantity;
+                existingItem.Quantity += quantity;
             }
 
-            HttpContext.Session.Set(CartKey.CART_KEY, cart); // Cập nhật lại session
-            return RedirectToAction("Index");
+            Cart = cartItems;
+            return RedirectToAction(nameof(Index));
         }
-   
-        public IActionResult RemoveFromCart(int id)
+
+        [HttpPost]
+        public IActionResult UpdateQuantity(int id, int quantity)
         {
             var cart = Cart;
-            var item = cart.FirstOrDefault(i => i.Book.Id == id);
-            if (item != null)
+            var item = cart.FirstOrDefault(x => x.Book.Id == id);
+
+            if (item == null)
+                return Json(new { success = false });
+
+            item.Quantity = quantity;
+            Cart = cart;  // Lưu giỏ hàng vào session
+
+            var newTotal = item.Quantity * item.UnitPrice;
+
+            return Json(new { success = true, newTotal = newTotal.ToString("N0") });
+        }
+
+        public IActionResult RemoveFromCart(int id)
+        {
+            var cartItems = Cart;
+            var existingItem = cartItems.FirstOrDefault(item => item.Book.Id == id);
+
+            if (existingItem != null)
             {
-                cart.Remove(item);
-                HttpContext.Session.Set(CartKey.CART_KEY, cart);
+                cartItems.Remove(existingItem);
+                Cart = cartItems;
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

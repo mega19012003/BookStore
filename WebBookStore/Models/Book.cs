@@ -47,7 +47,7 @@ namespace WebBookStore.Models
 
             [Required]
             [DisplayName("Số lượng tồn kho")]
-            public int Quantity { get; set; } = 1; //Số lượng tồn kho
+            public int Quantity { get; set; } //Số lượng tồn kho
             public int soldQuantity { get; set; } = 0; //Số lượng đã bán
 
             //public string? Translator { get; set; }  

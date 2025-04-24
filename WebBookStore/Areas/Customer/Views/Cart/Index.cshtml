@@ -1,52 +1,87 @@
-﻿@model List<WebBookStore.Models.CartItem>
-
+﻿@model List<CartItem>
 @{
     Layout = "/Areas/Customer/Views/Shared/_userMainLayout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
 
-@if (Model != null && Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Book Title</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Book.Title</td> <!-- Display book title -->
-                    <td>@item.Quantity</td> <!-- Display quantity -->
-                    <td>@item.UnitPrice.ToString("C")</td> <!-- Display unit price (formatted as currency) -->
-                    <td>@(item.Quantity * item.UnitPrice).ToString("C")</td> <!-- Display total price for the item -->
-                    <td>
-                        <!-- Remove Item Button -->
-                        <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.Book.Id })" class="btn btn-danger">
-                            Remove
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <!-- Optionally, show the total cart price -->
-    <div>
-        <strong>Total Cart Price: </strong>
-        @Model.Sum(item => item.Quantity * item.UnitPrice).ToString("C")
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Products</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <th scope="row">
+                                <div class="d-flex align-items-center">
+                                    <img src="@item.Book.CoverUrl" class="img-fluid rounded" alt="@item.Book.Title" style="width: 150px; height: 230px; object-fit: cover;">
+                                </div>
+                            </th>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Book.Title</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Book.FinalPrice.ToString("N0") VND</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Quantity</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4 total-price">@item.TotalPrice.ToString("N0") VND</p>
+                            </td>
+                            <td>
+                                <a asp-action="RemoveFromCart" asp-route-id="@item.Book.Id" class="btn btn-md rounded-circle bg-light border mt-4 text-danger">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!--<div class="mt-5">
+            <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
+            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
+        </div>-->
+        <div class="row g-4 justify-content-end">
+            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                <div class="bg-light rounded p-4">
+                    <h5>Cart Total</h5>
+                    <div class="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">@Model.Sum(i => i.TotalPrice).ToString("N0") VND</span>
+                    </div>
+                    <!-- có thể thêm shipping ở đây -->
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <strong>Total:</strong>
+                        <strong id="cart-total">@Model.Sum(i => i.TotalPrice).ToString("N0") VND</strong>
+                    </div>
+                </div>
+                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+            </div>
+        </div>
     </div>
-
-    <!-- Checkout Button -->
-    <a href="@Url.Action("Checkout", "Cart")" class="btn btn-primary">Proceed to Checkout</a>
-}
-else
-{
-    <p>Your cart is empty.</p>
-}
+</div>
+<!-- Cart Page End -->
