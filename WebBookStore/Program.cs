@@ -19,14 +19,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultTokenProviders()
     .AddDefaultUI()
     .AddEntityFrameworkStores<BookDbContext>();
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Identity/Account/Login";         // Khi chưa đăng nhập mà truy cập vào trang cần xác thực
-    options.LogoutPath = "/Identity/Account/Logout";       // Khi người dùng thực hiện đăng xuất
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // Khi người dùng không có quyền truy cập
-});
-
+builder.Services.AddAuthorization();
 // Cấu hình Identity
 builder.Services.AddRazorPages();
 
@@ -72,22 +65,23 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.LoginPath = "/Identity/Account/Login";         // Khi chưa đăng nhập mà truy cập vào trang cần xác thực
+    options.LogoutPath = "/Identity/Account/Logout";       // Khi người dùng thực hiện đăng xuất
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied"; // Khi người dùng không có quyền truy cập
     options.SlidingExpiration = true;
 });
 var app = builder.Build();
 
 //seed data
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     //var context = services.GetRequiredService<BookDbContext>();
     //await SeedData.InitializeAsync(context);
     await seed.SeedAdminAsync(services);
-}
+}*/
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -121,11 +115,14 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(name: "Admin", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}",
+    defaults: new { area = "Customer" }); // 👈 Cực kỳ quan trọng!
 
 /*app.MapControllerRoute(
     name: "default",

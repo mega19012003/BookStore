@@ -1,5 +1,8 @@
-﻿namespace WebBookStore.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebBookStore.Models
 {
+    [NotMapped]
     public class CartItem
     {
         public Book Book { get; set; }

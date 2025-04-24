@@ -7,10 +7,53 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\images\publishers\**" />
-    <Content Remove="wwwroot\images\publishers\**" />
-    <EmbeddedResource Remove="wwwroot\images\publishers\**" />
-    <None Remove="wwwroot\images\publishers\**" />
+    <Compile Remove="Areas\Identity\Pages\Account\images\publishers\**" />
+    <Content Remove="Areas\Identity\Pages\Account\images\publishers\**" />
+    <EmbeddedResource Remove="Areas\Identity\Pages\Account\images\publishers\**" />
+    <None Remove="Areas\Identity\Pages\Account\images\publishers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Areas\Identity\Pages\Account\images\authors\fujiko.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\george-rr-martin.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\jk-rowling.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\nam-cao.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\nguyen-du.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\nguyen-nhat-anh.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\ryohgo.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\stan-lee.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\vu-trong-phung.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\authors\xuan-quynh.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book1.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book10.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book11.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book12.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book13.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book14.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book15.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book16.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book17.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book18.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book19.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book2.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book20.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book21.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book22.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book23.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book24.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book25.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book26.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book27.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book28.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book29.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book3.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book30.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book4.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book5.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book6.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book7.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book8.jpg" />
+    <Content Include="Areas\Identity\Pages\Account\images\books\book9.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,24 +75,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="wwwroot\images\books\" />
-    <Folder Include="wwwroot\images\authors\" />
+    <Content Update="Areas\Customer\Views\Author\Delete.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Customer\Views\Author\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Areas\Customer\Views\Author\Edit.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Author\Delete.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Author\Index.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="Views\Author\Edit.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

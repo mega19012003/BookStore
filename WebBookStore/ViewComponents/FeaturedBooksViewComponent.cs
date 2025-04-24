@@ -20,7 +20,7 @@ namespace WebBookStore.ViewComponents
             var randomFeatured = featuredBooks
                 .Where(b => b.Id != currentBookId)
                 .OrderBy(_ => Guid.NewGuid())
-                .Take(count)      
+                .Take(count)
                 .ToList();
 
             return View(randomFeatured);

@@ -330,17 +330,8 @@ namespace WebBookStore.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("WebBookStore.Models.Cart", b =>
+            modelBuilder.Entity("WebBookStore.Models.CartItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
@@ -350,19 +341,9 @@ namespace WebBookStore.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("BookId");
 
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Carts");
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("WebBookStore.Models.Category", b =>
@@ -619,7 +600,7 @@ namespace WebBookStore.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("WebBookStore.Models.Cart", b =>
+            modelBuilder.Entity("WebBookStore.Models.CartItem", b =>
                 {
                     b.HasOne("WebBookStore.Models.Book", "Book")
                         .WithMany()
@@ -627,13 +608,7 @@ namespace WebBookStore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebBookStore.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
                     b.Navigation("Book");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebBookStore.Models.Image", b =>

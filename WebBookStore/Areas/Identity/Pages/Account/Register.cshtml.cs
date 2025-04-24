@@ -81,7 +81,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
             [Display(Name = "Tên người dùng")]
             [StringLength(100, MinimumLength = 5, ErrorMessage = "Tên phải từ 5 đến 100 ký tự")]
             public string Name { get; set; }
-            public string? Address { get; set; }
+            public string Address { get; set; }
             public DateOnly? Birthday { get; set; }
             public int Gender { get; set; }  // 0: Nữ, 1: Nam
             /// <summary>
@@ -112,7 +112,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            public String? Role { get; set; } //= SD.Role_Customer; // Default role is Customer
+            public string Role { get; set; } //= SD.Role_Customer; // Default role is Customer
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
         }
@@ -160,7 +160,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    if (!String.IsNullOrEmpty(Input.Role))
+                    if (!string.IsNullOrEmpty(Input.Role))
                     {
                         await _userManager.AddToRoleAsync(user, Input.Role);
                     }
@@ -175,7 +175,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId, code, returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -183,7 +183,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
                     }
                     else
                     {
