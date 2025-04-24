@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Drawing.Printing;
+using System.Security.Policy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +39,28 @@ namespace WebBookStore.Areas.Customer.Controllers
             return View(books.Where(b => !b.IsDeleted));*/
         }
 
+        [ActionName("AllBooksWithPages")]
+        public async Task<IActionResult> GetAllBooksWithPagesAsync(int? page)
+        {
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            var allBooks = await _bookRepository.GetAllBooksAsync();
+
+            var books = allBooks
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            int totalBooks = allBooks.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = totalPages;
+
+            return View("AllBooksWithPages", books);
+        }
+
         public async Task<IActionResult> Search(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
@@ -48,6 +73,110 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             return View("SearchResults", results);
         }
+
+        public async Task<IActionResult> GetBooksByCategory(int categoryId, int? page)
+        {
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            var allBooks = await _bookRepository.GetBooksByCategoryAsync(categoryId);
+
+            // Đếm tổng số sách
+            int totalBooks = allBooks.Count();
+
+            // Lấy trang hiện tại
+            var books = allBooks
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+            .ToList();
+
+            var category = await _categoryRepository.GetCategoryByIdAsync(categoryId);
+            ViewBag.CategoryName = category?.Name ?? "Không rõ thể loại";
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+            ViewBag.CategoryId = categoryId;
+            return View("BooksByCategory", books); 
+        }
+
+        public async Task<IActionResult> GetBooksByPublisher(int publisherId, int? page)
+        {
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            var allBooks = await _bookRepository.GetBooksByPublisherAsync(publisherId);
+
+            // Đếm tổng số sách
+            int totalBooks = allBooks.Count();
+
+            // Lấy trang hiện tại
+            var books = allBooks
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var publisher = await _publisherRepository.GetPublisherByIdAsync(publisherId);
+            ViewBag.PublisherName = publisher?.Name ?? "Không rõ nhà xuất bản";
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+            ViewBag.PublisherId = publisherId;
+
+            return View("BooksByPublisher", books);
+        }
+
+        public async Task<IActionResult> GetBooksByAuthor(int authorId, int? page)
+        {
+            int pageSize = 20;
+            int pageNumber = page ?? 1;
+
+            var allBooks = await _bookRepository.GetBooksByAuthorAsync(authorId);
+
+            // Đếm tổng số sách
+            int totalBooks = allBooks.Count();
+
+            // Lấy trang hiện tại
+            var books = allBooks
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var author = await _authorRepository.GetAuthorByIdAsync(authorId);
+            ViewBag.AuthorName = author?.Name ?? "Không rõ tác giả";
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+            ViewBag.AuthorId = authorId;
+
+            return View("BooksByAuthor", books); 
+        }
+        /*[HttpGet]
+        public async Task<IActionResult> Filter( int? categoryId, int? publisherId, int? authorId)
+        {
+                // Lấy full list
+                var allBooks = await _bookRepository.GetAllBooksAsync();
+                // Giữ nguyên bộ lọc trước
+                var vm = new BookFilterVM
+                {
+                    Categories = (await _categoryRepository.GetAllCategoriesAsync()).ToList(),
+                    Publishers = (await _publisherRepository.GetAllPublishersAsync()).ToList(),
+                    Authors = (await _authorRepository.GetAllAuthorsAsync()).ToList(),
+                    CategoryId = categoryId,
+                    PublisherId = publisherId,
+                    AuthorId = authorId
+                };
+
+                // Áp dụng lọc
+                if (categoryId.HasValue)
+                    allBooks = allBooks.Where(b => b.CategoryId == categoryId.Value);
+                if (publisherId.HasValue)
+                    allBooks = allBooks.Where(b => b.PublisherId == publisherId.Value);
+                if (authorId.HasValue)
+                    allBooks = allBooks.Where(b => b.AuthorId == authorId.Value);
+
+                vm.Books = allBooks;
+                return View(vm);
+            }*/
         /*// GET: Book/Create
         [HttpGet]
         public async Task<IActionResult> Create()

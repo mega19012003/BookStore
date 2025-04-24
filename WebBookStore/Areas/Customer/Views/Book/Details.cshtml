@@ -51,9 +51,25 @@
 
                     <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">@Model.Title</h4>
-                        <p class="mb-3">Tác giả: @Model.Author?.Name</p>
-                        <p class="mb-3">Thể loại: @Model.Category?.Name</p>
-                        <p class="mb-3">Nhà xuất bản: @Model.Publisher?.Name</p>
+                        <p class="mb-3">
+                            Tác giả:
+                            <a  asp-controller="Book" asp-action="GetBooksByAuthor" asp-route-authorId="@Model.Author?.Id">
+                                @Model.Author?.Name
+                            </a>
+                        </p>
+                        <p class="mb-3">
+                            Thể loại:
+                            <a asp-controller="Book" asp-action="GetBooksByCategory" asp-route-categoryId="@Model.Category?.Id">
+                                @Model.Category?.Name
+                            </a>
+                        </p>
+                        <p class="mb-3">
+                            Nhà xuất bản:
+                            <a  asp-controller="Book" asp-action="GetBooksByPublisher" asp-route-publisherId="@Model.Publisher?.Id">
+                                @Model.Publisher?.Name
+                            </a>
+                        </p>
+
                         <p class="mb-3">Số lượng @Model.Quantity</p>
                         <h5 class="fw-bold mb-3">
                             @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value > 0)
