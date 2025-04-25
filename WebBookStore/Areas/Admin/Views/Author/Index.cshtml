@@ -1,37 +1,64 @@
 ﻿@model IEnumerable<WebBookStore.Models.Author>
 
-<h2>Danh sách tác giả</h2>
+@{
+    ViewData["Title"] = "Danh sách tác giả";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tên tác giả</th>
-            <th>Tiểu sử</th>
-            <th>Hình ảnh</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var author in Model)
-        {
-            <tr>
-                <td>
-                    @if (author.IsDeleted)
-                    {
-                        <span class="text-danger">@author.Name (đã xóa mềm)</span>
-                    }
-                    else
-                    {
-                        <span>@author.Name</span>
-                    }
-                </td>
-                <td>@author.Biography</td>
-                <td><img src="@author.AvatarUrl" alt="@author.Name" width="50" /></td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@author.Id" class="btn btn-info btn-sm">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@author.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Danh sách tác giả</h1>
+
+    <!-- Nút thêm mới -->
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+    </p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên tác giả</th>
+                            <th>Tiểu sử</th>
+                            <th>Hình ảnh</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var author in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (author.IsDeleted)
+                                    {
+                                        <span class="text-danger">@author.Name (đã xóa mềm)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@author.Name</span>
+                                    }
+                                </td>
+                                <td>@author.Biography</td>
+                                <td><img src="@author.AvatarUrl" alt="@author.Name" width="50" /></td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@author.Id" class="btn btn-info btn-sm">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@author.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Page level plugins -->
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/js/demo/datatables-demo.js"></script>
+}

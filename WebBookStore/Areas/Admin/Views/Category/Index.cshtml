@@ -4,40 +4,59 @@
     ViewData["Title"] = "Danh sách thể loại";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Danh sách thể loại sách</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
-</p>
+    <!-- Nút thêm mới -->
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+    </p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tên thể loại</th>
-            <th>Mô tả</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var cate in Model)
-        {
-            <tr>
-                <td>
-                    @if (cate.IsDeleted)
-                    {
-                        <span class="text-danger">@cate.Name (đã xóa mềm)</span>
-                    }
-                    else
-                    {
-                        <span>@cate.Name</span>
-                    }
-                </td>
-                <td>@cate.Description</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@cate.Id" class="btn btn-warning btn-sm">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@cate.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên thể loại</th>
+                            <th>Mô tả</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cate in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (cate.IsDeleted)
+                                    {
+                                        <span class="text-danger">@cate.Name (đã xóa mềm)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@cate.Name</span>
+                                    }
+                                </td>
+                                <td>@cate.Description</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@cate.Id" class="btn btn-warning btn-sm">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@cate.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Page level plugins -->
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/js/demo/datatables-demo.js"></script>
+}
