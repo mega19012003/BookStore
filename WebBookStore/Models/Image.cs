@@ -3,7 +3,7 @@ using static WebBookStore.Models.Book;
 
 namespace WebBookStore.Models
 {
-    public class Image
+   /* public class Image
     {
         [Key]
         [Required]
@@ -16,5 +16,5 @@ namespace WebBookStore.Models
 
         public int DisplayOrder { get; set; }  // Thứ tự hiển thị ảnh (nếu có)
 
-    }
+    }*/
 }

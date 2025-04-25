@@ -17,8 +17,8 @@ namespace WebBookStore.Models
         //public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Image> Images { get; set; }
-        public DbSet<Wishlist> Wishlists { get; set; }
+       // public DbSet<Image> Images { get; set; }
+       // public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<AppUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

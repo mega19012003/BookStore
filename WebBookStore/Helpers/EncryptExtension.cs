@@ -5,7 +5,7 @@ namespace WebBookStore.Helpers
 {
     public static class EncryptExtension
     {
-        #region [Hashing Extension]
+        /*#region [Hashing Extension]
         public static string ToSHA256Hash(this string password, string? saltKey)
         {
             var sha256 = SHA256.Create();
@@ -38,6 +38,6 @@ namespace WebBookStore.Helpers
                 return sBuilder.ToString();
             }
         }
-        #endregion
+        #endregion*/
     }
 }

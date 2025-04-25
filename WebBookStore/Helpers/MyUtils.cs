@@ -22,7 +22,7 @@ namespace WebBookStore.Helpers
             }
         }*/
 
-        public static string GenerateRandomKey(int length = 5)
+        /*public static string GenerateRandomKey(int length = 5)
         {
             var pattern = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+~!#$%^&*";
             var sb = new StringBuilder();
@@ -32,6 +32,6 @@ namespace WebBookStore.Helpers
                 sb.Append(pattern[rd.Next(0, pattern.Length)]);
             }
             return sb.ToString();
-        }
+        }*/
     }
 }

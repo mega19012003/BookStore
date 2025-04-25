@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebBookStore.Models
 {
-    public class Wishlist
+   /* public class Wishlist
     {
         [Key]
         [Required]
@@ -17,5 +17,5 @@ namespace WebBookStore.Models
         public virtual Book Book { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-    }
+    }*/
 }
