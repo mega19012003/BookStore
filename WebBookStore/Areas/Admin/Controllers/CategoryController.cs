@@ -8,7 +8,7 @@ using WebBookStore.ViewModels;
 namespace WebBookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -86,7 +86,7 @@ namespace WebBookStore.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _categoryRepository.UpdateCategoryAsync(category); 
+                    await _categoryRepository.UpdateCategoryAsync(category);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception)

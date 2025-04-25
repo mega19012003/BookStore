@@ -6,6 +6,7 @@ using WebBookStore.ViewModels;
 
 namespace WebBookStore.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;

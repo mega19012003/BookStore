@@ -91,6 +91,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="wwwroot\fe admin\css\" />
+    <Folder Include="wwwroot\fe admin\js\" />
   </ItemGroup>
 
 </Project>

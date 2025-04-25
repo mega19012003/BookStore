@@ -1,0 +1,68 @@
+﻿@model IEnumerable<WebBookStore.Models.Book>
+
+@{
+    ViewData["Title"] = "Danh sách sách";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Thêm mới sách</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã SP</th>
+            <th>Hình ảnh</th>
+            <th>Tiêu đề</th>
+            <th>Giá tiền</th>
+            <th>Giảm giá</th>
+            <th>Tác giả</th>
+            <th>Thể loại</th>
+            <th>Nhà XB</th>
+            <th>Năm</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.ProductCode</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(book.CoverUrl))
+                    {
+                        <img src="@book.CoverUrl" alt="Bìa sách" width="60" height="90" />
+                    }
+                    else
+                    {
+                        <span>Không có ảnh</span>
+                    }
+                </td>
+                <td>
+                    @book.Title
+                    @if (book.IsDeleted)
+                    {
+                        <span class="text-danger">(đã xóa mềm)</span>
+                    }
+                </td>
+                <td>@book.Price.ToString("n0") đ</td>
+                <td>@(book.DiscountPrice.HasValue ? book.DiscountPrice.Value + "%" : "Không")</td>
+                <td>@book.Author?.Name</td>
+                <td>@book.Category?.Name</td>
+                <td>@book.Publisher?.Name</td>
+                <td>@book.PublishYear</td>
+                <td>
+                    @(book.OutOfStock ? "Hết hàng" : "Còn hàng")
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-info btn-sm">Xem</a>
+                    <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

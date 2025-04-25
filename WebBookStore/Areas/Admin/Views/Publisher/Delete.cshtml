@@ -1,0 +1,21 @@
+﻿@model WebBookStore.Models.Publisher
+
+@{
+    ViewData["Title"] = "Xác nhận xoá mềm nhà xuất bản";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Bạn có chắc muốn xoá mềm nhà xuất bản sau?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">Tên:</dt>
+    <dd class="col-sm-10">@Model.Name</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-warning">Xoá mềm</button>
+    <a class="btn btn-secondary" href="@Url.Action("Index")">Huỷ</a>
+</form>

@@ -20,10 +20,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddDefaultUI()
     .AddEntityFrameworkStores<BookDbContext>();
 builder.Services.AddAuthorization();
-// Cấu hình Identity
-builder.Services.AddRazorPages();
-
-builder.Services.AddDistributedMemoryCache();
 
 //EF, interface
 builder.Services.AddScoped<IBookRepository, EFBookRepository>();
@@ -61,6 +57,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDistributedMemoryCache();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
@@ -106,10 +103,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
-app.UseRouting();
-
 app.UseSession();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
