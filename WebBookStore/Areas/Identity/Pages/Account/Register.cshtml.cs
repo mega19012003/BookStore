@@ -111,7 +111,11 @@ namespace WebBookStore.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
+            
+            [Required]
+            [Phone]
+            [Display(Name = "Số điện thoại")]
+            public string PhoneNumber { get; set; }
             public string Role { get; set; } //= SD.Role_Customer; // Default role is Customer
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
@@ -151,6 +155,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
                 user.Address = Input.Address;
                 user.Birthday = Input.Birthday;
                 user.Gender = Input.Gender;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

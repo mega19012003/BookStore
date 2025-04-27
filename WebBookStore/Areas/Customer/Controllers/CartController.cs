@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebBookStore.Helpers;
 using WebBookStore.Models;
 using WebBookStore.Repositories;
+using WebBookStore.ViewModels;
 
 namespace WebBookStore.Areas.Customer.Controllers
 {
@@ -101,6 +102,54 @@ namespace WebBookStore.Areas.Customer.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Checkout()
+        {
+            var cart = Cart; 
+            return View(cart);
+        }
+
+        // POST: /Customer/Cart/Checkout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout(CheckoutVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                //decimal shippingFee = 30000;
+                //decimal totalCart = Cart.Sum(x => x.TotalPrice);
+
+                var bill = new Bill
+                {
+                    FullName = model.FullName,
+                    Address = model.Address,
+                    PhoneNumber = model.PhoneNumber,
+                    Note = model.Note,
+                    OrderDate = DateTime.Now,
+                    //TotalAmount = totalCart + shippingFee, // Tổng tiền + phí ship
+                    TotalAmount = Cart.Sum(x => x.TotalPrice),
+                    //ShippingFee = shippingFee,
+                    PaymentMethod = model.PaymentMethod
+                };
+
+                _context.Bills.Add(bill);
+                _context.SaveChanges();
+
+                if (model.PaymentMethod == "VNPAY")
+                {
+                    // Nếu chọn VNPAY thì chuyển đến trang thanh toán
+                    return RedirectToAction("VnpayPayment", "Payment", new { billId = bill.Id }); // <-- sửa đúng là BillId
+                }
+                else if (model.PaymentMethod == "COD")
+                {
+                    // Nếu chọn COD thì trả về trang thành công luôn
+                    return RedirectToAction("OrderSuccess");
+                }
+            }
+
+            return View(Cart);
         }
     }
 }

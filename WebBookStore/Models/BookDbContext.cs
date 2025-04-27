@@ -15,10 +15,11 @@ namespace WebBookStore.Models
         public DbSet<Author> Authors { get; set; }
         public DbSet<Review> Reviews { get; set; }
         //public DbSet<Cart> Carts { get; set; }
-        public DbSet<CartItem> CartItems { get; set; }
+        //public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
-       // public DbSet<Image> Images { get; set; }
-       // public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<Bill> Bills { get; set; }
+        // public DbSet<Image> Images { get; set; }
+        // public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<AppUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,7 +45,7 @@ namespace WebBookStore.Models
                 .HasForeignKey(i => i.BookId);*/
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<CartItem>().HasNoKey(); // 👈 KHÔNG có khóa chính
+            //modelBuilder.Entity<CartItem>().HasNoKey(); // 👈 KHÔNG có khóa chính
         }
 
     }

@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+@{
+    Layout = "/Areas/Customer/Views/Shared/_userMainLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+
+<div class="container py-5">
+    <!-- Use container instead of container-fluid for a fixed-width container -->
+    <!-- Page Header -->
+    <div class="row justify-content-center">
+        <h1 class="text-center">Manage your account</h1>
+		<br />
+        <br />
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <br />
+            <br />
+            <!-- Set max width for the content, col-md-10 will give space but keep it centered -->
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Left column for navigation -->
+                    <partial name="_ManageNav" />
+                </div>
+                <div class="col-md-9">
+                    <!-- Right column for form -->
+                    <h3>@ViewData["Title"]</h3>
+                    <partial name="_StatusMessage" for="StatusMessage" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form id="profile-form" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
+                                    <label asp-for="Username" class="form-label"></label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number." />
+                                    <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

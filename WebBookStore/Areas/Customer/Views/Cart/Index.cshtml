@@ -1,4 +1,4 @@
-﻿@model List<CartItem>
+﻿@model List<WebBookStore.ViewModels.CartItem>
 @{
     Layout = "/Areas/Customer/Views/Shared/_userMainLayout.cshtml";
 }
@@ -72,14 +72,16 @@
                         <span>Subtotal:</span>
                         <span id="cart-subtotal">@Model.Sum(i => i.TotalPrice).ToString("N0") VND</span>
                     </div>
-                    <!-- có thể thêm shipping ở đây -->
                     <hr />
                     <div class="d-flex justify-content-between">
                         <strong>Total:</strong>
                         <strong id="cart-total">@Model.Sum(i => i.TotalPrice).ToString("N0") VND</strong>
                     </div>
                 </div>
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                <a asp-area="Customer" asp-action="Checkout" asp-controller="Cart"
+                   class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">
+                    Proceed Checkout
+                </a>
             </div>
         </div>
     </div>
