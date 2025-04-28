@@ -1,0 +1,74 @@
+﻿@model IEnumerable<WebBookStore.Models.Bill>
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+}
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Danh sách đơn hàng</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Đơn hàng</th>
+                            <th>Người mua</th>
+                            <th>Địa chỉ</th>
+                            <th>Số điện thoại</th>
+                            <th>Note</th>
+                            <th>Ngày đặt hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Phương thức thanh toán</th>
+							<th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bill in Model)
+                        {
+                            <tr>
+                                <td>@bill.Id</td>
+                                <td>@bill.FullName</td>
+                                <td>@bill.Address</td>
+                                <td>@bill.PhoneNumber</td>
+                                <td>@bill.Note</td>
+                                <td>@bill.OrderDate</td>
+                                <td>@bill.TotalAmount</td>
+                                <td>@bill.PaymentMethod</td>
+                                <td>@bill.Status</td>
+                                <td>
+                                    @if (bill.Status == "Pending")
+                                    {
+                                        <form asp-action="AcceptOrder" asp-route-id="@bill.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-info btn-sm">Xác nhận đơn hàng</button>
+                                        </form>
+
+                                        <form asp-action="Delete" asp-route-id="@bill.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm">Từ chối đơn hàng</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="btn btn-success btn-sm">Đã giao hàng</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Page level plugins -->
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/js/demo/datatables-demo.js"></script>
+}

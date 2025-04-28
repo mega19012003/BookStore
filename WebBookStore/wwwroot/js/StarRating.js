@@ -1,39 +1,48 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    const stars = document.querySelectorAll('.rating-stars i');
+    const stars = document.querySelectorAll('.rating-stars .fa-star');
+    const ratingInput = document.getElementById('Rating');
+    const ratingText = document.getElementById('rating-value');
+
     stars.forEach(star => {
+        star.addEventListener('click', function () {
+            const rating = this.getAttribute('data-index');
+            setRating(rating);
+            showRating(rating);
+        });
+
         star.addEventListener('mouseover', function () {
-            const index = parseInt(this.getAttribute('data-index'));
+            const index = this.getAttribute('data-index');
             highlightStars(index);
         });
 
         star.addEventListener('mouseout', function () {
             resetStars();
         });
-
-        star.addEventListener('click', function () {
-            const index = parseInt(this.getAttribute('data-index'));
-            saveRating(index);
-        });
     });
+
+    function setRating(rating) {
+        ratingInput.value = rating;
+        highlightStars(rating);
+    }
+
+    function showRating(rating) {
+        ratingText.innerText = `Bạn đã chọn ${rating} sao.`;
+    }
 
     function highlightStars(index) {
         stars.forEach(star => {
-            const starIndex = parseInt(star.getAttribute('data-index'));
-            star.classList.remove('text-muted');
-            star.classList.toggle('text-warning', starIndex <= index);
-            star.classList.toggle('text-muted', starIndex > index);
+            if (parseInt(star.getAttribute('data-index')) <= parseInt(index)) {
+                star.classList.remove('text-muted');
+                star.classList.add('text-warning');
+            } else {
+                star.classList.remove('text-warning');
+                star.classList.add('text-muted');
+            }
         });
     }
 
     function resetStars() {
-        stars.forEach(star => {
-            star.classList.remove('text-warning');
-            star.classList.add('text-muted');
-        });
-    }
-
-    function saveRating(index) {
-        console.log("Bạn đã đánh giá: " + index + " sao");
-        // TODO: Xử lý lưu đánh giá tại đây nếu muốn
+        const rating = ratingInput.value;
+        highlightStars(rating);
     }
 });

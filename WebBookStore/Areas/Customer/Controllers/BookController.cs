@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing.Printing;
+using System.Security.Claims;
 using System.Security.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,16 @@ namespace WebBookStore.Areas.Customer.Controllers
         private readonly IAuthorRepository _authorRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IPublisherRepository _publisherRepository;
+        private readonly IReviewRepository  _reviewRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BookController(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublisherRepository publisherRepository, IWebHostEnvironment webHostEnvironment)
+        public BookController(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IPublisherRepository publisherRepository, IReviewRepository reviewRepository, IWebHostEnvironment webHostEnvironment)
         {
             _bookRepository = bookRepository;
             _authorRepository = authorRepository;
             _categoryRepository = categoryRepository;
             _publisherRepository = publisherRepository;
+            _reviewRepository = reviewRepository;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -150,33 +153,6 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             return View("BooksByAuthor", books); 
         }
-        /*[HttpGet]
-        public async Task<IActionResult> Filter( int? categoryId, int? publisherId, int? authorId)
-        {
-                // Lấy full list
-                var allBooks = await _bookRepository.GetAllBooksAsync();
-                // Giữ nguyên bộ lọc trước
-                var vm = new BookFilterVM
-                {
-                    Categories = (await _categoryRepository.GetAllCategoriesAsync()).ToList(),
-                    Publishers = (await _publisherRepository.GetAllPublishersAsync()).ToList(),
-                    Authors = (await _authorRepository.GetAllAuthorsAsync()).ToList(),
-                    CategoryId = categoryId,
-                    PublisherId = publisherId,
-                    AuthorId = authorId
-                };
-
-                // Áp dụng lọc
-                if (categoryId.HasValue)
-                    allBooks = allBooks.Where(b => b.CategoryId == categoryId.Value);
-                if (publisherId.HasValue)
-                    allBooks = allBooks.Where(b => b.PublisherId == publisherId.Value);
-                if (authorId.HasValue)
-                    allBooks = allBooks.Where(b => b.AuthorId == authorId.Value);
-
-                vm.Books = allBooks;
-                return View(vm);
-            }*/
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -185,5 +161,28 @@ namespace WebBookStore.Areas.Customer.Controllers
             return View(book);
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostReview(int bookId, string content, int rating)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account"); // Đảm bảo người dùng đã đăng nhập
+            }
+
+            var review = new Review
+            {
+                BookId = bookId,
+                UserId = User.Identity.Name, // Giả sử User.Identity.Name chứa UserId
+                Comment = content,
+                Rating = rating,
+                CreatedAt = DateTime.Now
+            };
+
+            await _reviewRepository.AddReviewAsync(review); // Lưu review vào cơ sở dữ liệu
+
+            return RedirectToAction("Details", new { id = bookId }); // Quay lại trang chi tiết sách
+        }
+
     }
 }

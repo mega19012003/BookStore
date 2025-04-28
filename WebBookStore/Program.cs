@@ -30,6 +30,8 @@ builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IPublisherRepository, EFPublisherRepository>();
 builder.Services.AddScoped<IReviewRepository, EFReviewRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+builder.Services.AddScoped<IBillRepository, EFBillRepository>();
+builder.Services.AddScoped<IReviewRepository, EFReviewRepository>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

@@ -23,11 +23,6 @@ namespace WebBookStore.Repositories
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
         }
-        public async Task UpdateReviewAsync(Review review)
-        {
-            _context.Reviews.Update(review);
-            await _context.SaveChangesAsync();
-        }
         public async Task DeleteReviewAsync(int id)
         {
             var review = await GetReviewByIdAsync(id);

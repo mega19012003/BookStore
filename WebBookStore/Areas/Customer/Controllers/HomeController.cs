@@ -23,6 +23,7 @@ namespace WebBookStore.Controllers
         public async Task<IActionResult> Index()
         {
             var books = await _bookRepository.GetNewestBooksAsync(12);
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
             /*if (books == null || !books.Any())
             {
                 // Log thêm thông tin để kiểm tra

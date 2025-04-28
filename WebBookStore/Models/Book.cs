@@ -26,8 +26,8 @@ namespace WebBookStore.Models
             public int PublisherId { get; set; }
             public Publisher Publisher { get; set; }
 
-            [DisplayName("Đánh giá")]
-            public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+            public ICollection<Review> Reviews { get; set; }
 
             ////////////////////////////////////////////////////////////////////
             [Required]

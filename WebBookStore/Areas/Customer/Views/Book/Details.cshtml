@@ -212,8 +212,11 @@
                             </div>
                         </div>
                     </div>
-                    <form asp-action="PostReview" method="post">
+                    <form asp-action="PostReview" method="post" asp-controller="Book">
                         <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+
+                        <!-- Hidden input to store the rating value -->
+                        <input type="hidden" id="Rating" name="Rating" value="0" />
 
                         <div class="col-lg-12">
                             <div class="d-flex justify-content-between py-3 mb-4">
@@ -230,8 +233,8 @@
                             </div>
                         </div>
 
+                        <!-- User comment section -->
                         <div class="row g-4">
-
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <div class="col-lg-12 mb-3 d-flex align-items-center">
@@ -242,7 +245,7 @@
                             else
                             {
                                 <div class="col-lg-12 alert alert-warning">
-                                    Vui lòng <a href="/Account/Login">đăng nhập</a> để gửi đánh giá.
+                                    Vui lòng <a asp-area="Identity" asp-page="/Account/Manage/Index">đăng nhập</a> để gửi đánh giá.
                                 </div>
                             }
 
@@ -264,6 +267,8 @@
                             }
                         </div>
                     </form>
+
+                   
 
                 </div>
             </div>
@@ -293,7 +298,27 @@
     </div>
 </div>
 <!-- Single Product End -->
-@section Scripts {
-    <script src="~/js/StarRating.js"></script> <!-- Thêm phần này để load file JS -->
-}
+<script>
+    // Add click event to the stars to set the rating value
+    document.querySelectorAll('.rating-stars i').forEach(function(star) {
+        star.addEventListener('click', function() {
+            var rating = this.getAttribute('data-index');
+
+            // Update the hidden input value
+            document.getElementById('Rating').value = rating;
+
+            // Update the star colors based on the rating
+            document.querySelectorAll('.rating-stars i').forEach(function(star, index) {
+                if (index < rating) {
+                    star.classList.remove('text-muted');
+                    star.classList.add('text-warning');
+                } else {
+                    star.classList.remove('text-warning');
+                    star.classList.add('text-muted');
+                }
+            });
+        });
+    });
+</script>
+
 

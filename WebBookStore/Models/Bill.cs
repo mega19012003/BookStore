@@ -32,10 +32,10 @@ namespace WebBookStore.Models
         [Required]
         public decimal TotalAmount { get; set; }
 
-        public decimal ShippingFee { get; set; }
-
         [Required]
         [StringLength(50)]
         public string PaymentMethod { get; set; }  // VNPay / CashOnDelivery / etc.
+        [Required]
+        public string Status { get; set; } = "Pending"; // Trạng thái đơn hàng (Pending, Processing, Completed, Canceled)
     }
 }

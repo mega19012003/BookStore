@@ -1,7 +1,12 @@
 ﻿@{
     Layout = "/Areas/Customer/Views/Shared/_userMainLayout.cshtml";
 }
-
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
 <!-- Hero Start -->
 <div class="container-fluid py-5 mb-5 hero-header">
     <div class="container py-5">

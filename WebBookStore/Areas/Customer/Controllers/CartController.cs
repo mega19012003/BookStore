@@ -111,45 +111,67 @@ namespace WebBookStore.Areas.Customer.Controllers
             return View(cart);
         }
 
-        // POST: /Customer/Cart/Checkout
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Checkout(CheckoutVM model)
+        public async Task<IActionResult> Checkout(CheckoutVM vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //decimal shippingFee = 30000;
-                //decimal totalCart = Cart.Sum(x => x.TotalPrice);
-
-                var bill = new Bill
-                {
-                    FullName = model.FullName,
-                    Address = model.Address,
-                    PhoneNumber = model.PhoneNumber,
-                    Note = model.Note,
-                    OrderDate = DateTime.Now,
-                    //TotalAmount = totalCart + shippingFee, // Tổng tiền + phí ship
-                    TotalAmount = Cart.Sum(x => x.TotalPrice),
-                    //ShippingFee = shippingFee,
-                    PaymentMethod = model.PaymentMethod
-                };
-
-                _context.Bills.Add(bill);
-                _context.SaveChanges();
-
-                if (model.PaymentMethod == "VNPAY")
-                {
-                    // Nếu chọn VNPAY thì chuyển đến trang thanh toán
-                    return RedirectToAction("VnpayPayment", "Payment", new { billId = bill.Id }); // <-- sửa đúng là BillId
-                }
-                else if (model.PaymentMethod == "COD")
-                {
-                    // Nếu chọn COD thì trả về trang thành công luôn
-                    return RedirectToAction("OrderSuccess");
-                }
+                return View(vm);
             }
 
-            return View(Cart);
+            // Map dữ liệu ViewModel => Model
+            var bill = new Bill
+            {
+                FullName = vm.FullName,
+                Address = vm.Address,
+                PhoneNumber = vm.PhoneNumber,
+                // Email = vm.Email,
+                Note = vm.Note,
+                TotalAmount = vm.TotalAmount,
+                PaymentMethod = vm.PaymentMethod,
+                Status = "Pending",
+                OrderDate = DateTime.Now,
+            };
+
+            _context.Bills.Add(bill);
+            await _context.SaveChangesAsync();
+
+            foreach (var cartItem in Cart)
+            {
+                var product = await _context.Books.FirstOrDefaultAsync(p => p.Id == cartItem.Book.Id);
+                if (product != null)
+                {
+                    product.Quantity -= cartItem.Quantity;  // Giảm số lượng trong cơ sở dữ liệu
+                    _context.Books.Update(product);
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            Cart = new List<CartItem>(); // Giỏ hàng trở về rỗng
+
+            if (vm.PaymentMethod == "CashOnDelivery")
+            {
+                return RedirectToAction("Success");
+            }
+            else if (vm.PaymentMethod == "VNPay")
+            {
+                // TODO: Redirect sang trang VNPay
+                return RedirectToAction("VNPayPayment", new { id = bill.Id });
+            }
+
+            return RedirectToAction("Checkout");
         }
+
+        public IActionResult Success()
+        {
+            return View();
+        }
+
+        public IActionResult VNPayPayment(int id)
+        {
+            // xử l1y TT vnpay sau
+            return Content($"Thanh toán VNPay cho đơn {id}");
+        }
+
     }
 }

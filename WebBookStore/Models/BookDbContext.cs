@@ -18,6 +18,7 @@ namespace WebBookStore.Models
         //public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Bill> Bills { get; set; }
+        public DbSet<BillDetail> BillDetails { get; set; }
         // public DbSet<Image> Images { get; set; }
         // public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<AppUser> Users { get; set; }
@@ -44,7 +45,10 @@ namespace WebBookStore.Models
                 .WithMany(b => b.Images)
                 .HasForeignKey(i => i.BookId);*/
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Book)
+            .WithMany(b => b.Reviews)
+            .HasForeignKey(r => r.BookId);  
             //modelBuilder.Entity<CartItem>().HasNoKey(); // 👈 KHÔNG có khóa chính
         }
 

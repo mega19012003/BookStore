@@ -4,14 +4,27 @@ namespace WebBookStore.ViewModels
 {
     public class CheckoutVM
     {
+        [Required]
+        [StringLength(100)]
         public string FullName { get; set; }
+
+        [Required]
+        [StringLength(200)]
         public string Address { get; set; }
+
+        [Required]
+        [Phone]
         public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+
+        //[EmailAddress]
+        //public string Email { get; set; }
+
         public string Note { get; set; }
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+
+        [Required]
         public decimal TotalAmount { get; set; }
-        public decimal ShippingFee { get; set; }
-        public string PaymentMethod { get; set; }
+
+        [Required]
+        public string PaymentMethod { get; set; } // "CashOnDelivery" hoặc "VNPay"
     }
 }

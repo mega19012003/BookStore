@@ -123,7 +123,7 @@ namespace WebBookStore.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        return LocalRedirect(returnUrl); // Trả về trang trước hoặc home
+                        return RedirectToAction("Index", "Home", new { area = "Customer" });
                     }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
