@@ -2,6 +2,7 @@
 using System.Drawing.Printing;
 using System.Security.Claims;
 using System.Security.Policy;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -163,25 +164,23 @@ namespace WebBookStore.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostReview(int bookId, string content, int rating)
+        [Authorize]
+        public async Task<IActionResult> AddReview(ReviewVM model)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account"); // Đảm bảo người dùng đã đăng nhập
-            }
+            if (!ModelState.IsValid)
+                return RedirectToAction("Detail", new { id = model.BookId });
 
             var review = new Review
             {
-                BookId = bookId,
-                UserId = User.Identity.Name, // Giả sử User.Identity.Name chứa UserId
-                Comment = content,
-                Rating = rating,
+                BookId = model.BookId,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                Rating = model.Rating,
+                Comment = model.Comment,
                 CreatedAt = DateTime.Now
             };
 
-            await _reviewRepository.AddReviewAsync(review); // Lưu review vào cơ sở dữ liệu
-
-            return RedirectToAction("Details", new { id = bookId }); // Quay lại trang chi tiết sách
+            await _reviewRepository.AddReviewAsync(review);
+            return RedirectToAction("Details", new { id = model.BookId });
         }
 
     }

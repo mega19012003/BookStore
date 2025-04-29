@@ -18,6 +18,13 @@ namespace WebBookStore.Repositories
         {
             return await _context.Reviews.FirstOrDefaultAsync(p => p.Id == id);
         }
+        public async Task<IEnumerable<Review>> GetReviewsByBookIdAsync(int bookId)
+        {
+            return await _context.Reviews
+                .Include(r => r.User)
+                .Where(r => r.BookId == bookId)
+                .ToListAsync();
+        }
         public async Task AddReviewAsync(Review review)
         {
             await _context.Reviews.AddAsync(review);
