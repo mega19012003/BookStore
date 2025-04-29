@@ -158,9 +158,21 @@ namespace WebBookStore.Areas.Customer.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
-            if (book == null) return NotFound();
-            return View(book);
+            var reviews = await _reviewRepository.GetReviewsByBookIdAsync(id);
+            var averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
+            if (book == null)
+            {
+                return NotFound();
+            }
+            // Tạo view model với sách và reviews
+            var viewModel = new BookDetailVM
+            {
+                Book = book,
+                Reviews = reviews,
+                AverageRating = averageRating
+            };
 
+            return View(viewModel);
         }
 
         [HttpPost]
