@@ -44,25 +44,44 @@ namespace WebBookStore.Areas.Customer.Controllers
         }
 
         [ActionName("AllBooksWithPages")]
-        public async Task<IActionResult> GetAllBooksWithPagesAsync(int? page)
+        public async Task<IActionResult> GetAllBooksWithPagesAsync(int? page, int? authorId, int? categoryId, int? publisherId)
         {
             int pageSize = 20;
             int pageNumber = page ?? 1;
 
-            var allBooks = await _bookRepository.GetAllBooksAsync();
+            var allBooks = await _bookRepository.GetAllBooksAsync(); // Gồm Author, Category, Publisher
+
+            if (authorId.HasValue && authorId.Value != 0)
+                allBooks = allBooks.Where(b => b.AuthorId == authorId).ToList();
+
+            if (categoryId.HasValue && categoryId.Value != 0)
+                allBooks = allBooks.Where(b => b.CategoryId == categoryId).ToList();
+
+            if (publisherId.HasValue && publisherId.Value != 0)
+                allBooks = allBooks.Where(b => b.PublisherId == publisherId).ToList();
+
+            int totalBooks = allBooks.Count();
+            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
 
             var books = allBooks
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            int totalBooks = allBooks.Count();
-            int totalPages = (int)Math.Ceiling((double)totalBooks / pageSize);
+            var viewModel = new BookFilterVM
+            {
+                AuthorId = authorId,
+                CategoryId = categoryId,
+                PublisherId = publisherId,
+                Authors = await _authorRepository.GetAllAuthorsAsync(),
+                Categories = await _categoryRepository.GetAllCategoriesAsync(),
+                Publishers = await _publisherRepository.GetAllPublishersAsync(),
+                Books = books,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages
+            };
 
-            ViewBag.CurrentPage = pageNumber;
-            ViewBag.TotalPages = totalPages;
-
-            return View("AllBooksWithPages", books);
+            return View("AllBooksWithPages", viewModel);
         }
 
         public async Task<IActionResult> Search(string keyword)
@@ -154,10 +173,14 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             return View("BooksByAuthor", books); 
         }
+
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
+            var author = await _authorRepository.GetAuthorByIdAsync(book.AuthorId);
+            var category = await _categoryRepository.GetCategoryByIdAsync(book.CategoryId);
+            var publisher = await _publisherRepository.GetPublisherByIdAsync(book.PublisherId);
             var reviews = await _reviewRepository.GetReviewsByBookIdAsync(id);
             var averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
             if (book == null)
@@ -184,8 +207,11 @@ namespace WebBookStore.Areas.Customer.Controllers
                 Id = id,
                 Title = book.Title,
                 AuthorId = book.AuthorId,
-                PublisherId = book.PublisherId,
+                AuthorName = author?.Name,
                 CategoryId = book.CategoryId,
+                CategoryName = category?.Name,
+                PublisherId = book.PublisherId,
+                PublisherName = publisher?.Name,
                 CoverUrl = book.CoverUrl,
                 Price = book.Price,
                 DiscountPrice = book.DiscountPrice,
@@ -201,7 +227,6 @@ namespace WebBookStore.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> AddReview(ReviewVM model)
         {
             var review = new Review

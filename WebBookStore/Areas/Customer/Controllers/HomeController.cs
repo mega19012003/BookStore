@@ -42,10 +42,10 @@ namespace WebBookStore.Controllers
             var vm = new HomePageBooksVM
             {
                 AllBooks = allBooks,
-                AdventureBooks = allBooks.Where(b => b.Category.Name == "Tiểu thuyết").ToList(),
-                FantasyBooks = allBooks.Where(b => b.Category.Name == "Giả tưởng").ToList(),
-                RomanceBooks = allBooks.Where(b => b.Category.Name == "Trinh thám").ToList(),
-                HorrorBooks = allBooks.Where(b => b.Category.Name == "Kinh dị").ToList(),
+                BookOption1 = allBooks.Where(b => b.Category.Name == "Tiểu thuyết").ToList(),
+                BookOption2 = allBooks.Where(b => b.Category.Name == "Giả tưởng").ToList(),
+                BookOption3 = allBooks.Where(b => b.Category.Name == "Trinh thám").ToList(),
+                BookOption4 = allBooks.Where(b => b.Category.Name == "Kinh dị").ToList(),
             };
 
             return View(vm);

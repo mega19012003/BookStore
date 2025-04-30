@@ -14,7 +14,7 @@ using static System.Reflection.Metadata.BlobBuilder;
 namespace WebBookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class BookController : Controller
     {
         private readonly IBookRepository _bookRepository;

@@ -24,18 +24,6 @@ namespace WebBookStore.Areas.Customer.Controllers
             return View(categories);
         }
 
-        /*// GET: CategoryController/Details/5
-        [HttpGet]
-        public async Task<ActionResult> Details(int id)
-        {
-            var category = await _categoryRepository.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
-        }*/
-
         // GET: CategoryController/Create
         [HttpGet]
         public ActionResult Create()

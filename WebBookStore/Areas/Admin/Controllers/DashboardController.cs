@@ -5,7 +5,7 @@ using WebBookStore.Models;
 namespace WebBookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class DashBoardController : Controller
     {
         public IActionResult Index()

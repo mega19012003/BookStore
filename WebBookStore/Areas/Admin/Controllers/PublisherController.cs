@@ -8,7 +8,7 @@ using WebBookStore.ViewModels;
 namespace WebBookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class PublisherController : Controller
     {
         private readonly IPublisherRepository _publisherRepository;

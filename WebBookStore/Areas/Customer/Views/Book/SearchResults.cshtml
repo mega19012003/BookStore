@@ -3,13 +3,16 @@
 @{
     Layout = "/Areas/Customer/Views/Shared/_userMainLayout.cshtml";
 }
-
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active text-white">kết quả tìm kiếm</li>
+    </ol>
+</div>
 <div class="container-fluid py-5">
     <div class="container py-5">
         <div class="text-center mx-auto mb-5" style="max-width: 700px;">
-            <h1 class="display-4">Result</h1>
-            <h1 class="display-4">Result</h1>
-            <p>Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.</p>
         </div>
         <div class="row g-4">
             @if (Model != null && Model.Any())

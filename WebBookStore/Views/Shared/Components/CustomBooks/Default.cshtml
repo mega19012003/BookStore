@@ -5,15 +5,15 @@
         @await Html.PartialAsync("_BookListPartial", Model.AllBooks)
     </div>
     <div id="tab-2" class="tab-pane fade show p-0">
-        @await Html.PartialAsync("_BookListPartial", Model.AdventureBooks)
+        @await Html.PartialAsync("_BookListPartial", Model.BookOption1)
     </div>
     <div id="tab-3" class="tab-pane fade show p-0">
-        @await Html.PartialAsync("_BookListPartial", Model.FantasyBooks)
+        @await Html.PartialAsync("_BookListPartial", Model.BookOption2)
     </div>
     <div id="tab-4" class="tab-pane fade show p-0">
-        @await Html.PartialAsync("_BookListPartial", Model.RomanceBooks)
+        @await Html.PartialAsync("_BookListPartial", Model.BookOption3)
     </div>
     <div id="tab-5" class="tab-pane fade show p-0">
-        @await Html.PartialAsync("_BookListPartial", Model.HorrorBooks)
+        @await Html.PartialAsync("_BookListPartial", Model.BookOption4)
     </div>
 </div>

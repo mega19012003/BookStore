@@ -9,7 +9,7 @@ using WebBookStore.ViewModels;
 namespace WebBookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AuthorController : Controller
     {
         private readonly IAuthorRepository _authorRepository;

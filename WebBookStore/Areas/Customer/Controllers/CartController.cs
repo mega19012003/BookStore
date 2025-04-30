@@ -142,6 +142,7 @@ namespace WebBookStore.Areas.Customer.Controllers
                 if (product != null)
                 {
                     product.Quantity -= cartItem.Quantity;  // Giảm số lượng trong cơ sở dữ liệu
+                    product.soldQuantity += cartItem.Quantity; // Tăng số lượng đã bán
                     _context.Books.Update(product);
                 }
             }
