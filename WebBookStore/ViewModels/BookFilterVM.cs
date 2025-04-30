@@ -1,4 +1,5 @@
-﻿using WebBookStore.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using WebBookStore.Models;
 
 namespace WebBookStore.ViewModels
 {
@@ -8,9 +9,9 @@ namespace WebBookStore.ViewModels
         public int? CategoryId { get; set; }
         public int? PublisherId { get; set; }
 
-        public IEnumerable<Author> Authors { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
-        public IEnumerable<Publisher> Publishers { get; set; }
+        public SelectList Authors { get; set; }
+        public SelectList Categories { get; set; }
+        public SelectList Publishers { get; set; }
 
         public List<Book> Books { get; set; }
 

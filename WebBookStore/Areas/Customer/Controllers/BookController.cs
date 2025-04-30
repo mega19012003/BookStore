@@ -73,9 +73,16 @@ namespace WebBookStore.Areas.Customer.Controllers
                 AuthorId = authorId,
                 CategoryId = categoryId,
                 PublisherId = publisherId,
-                Authors = await _authorRepository.GetAllAuthorsAsync(),
-                Categories = await _categoryRepository.GetAllCategoriesAsync(),
-                Publishers = await _publisherRepository.GetAllPublishersAsync(),
+                // Ở đây thêm SelectList, với giá trị null -> sẽ chọn “-- Tất cả --”
+                Authors = new SelectList(
+                          await _authorRepository.GetAllAuthorsAsync(),
+                          "Id", "Name", authorId),
+                Categories = new SelectList(
+                          await _categoryRepository.GetAllCategoriesAsync(),
+                          "Id", "Name", categoryId),
+                Publishers = new SelectList(
+                          await _publisherRepository.GetAllPublishersAsync(),
+                          "Id", "Name", publisherId),
                 Books = books,
                 CurrentPage = pageNumber,
                 TotalPages = totalPages
