@@ -164,11 +164,36 @@ namespace WebBookStore.Areas.Customer.Controllers
             {
                 return NotFound();
             }
+
             // Tạo view model với sách và reviews
+            var reviewVMs = reviews
+                .Where(r => !r.IsDeleted)
+                .Select(r => new ReviewVM
+                {
+                    Id = r.Id,
+                    UserName = r.User.Name ?? r.User.UserName,
+                    Rating = r.Rating,
+                    Comment = r.Comment,
+                    CreatedAt = r.CreatedAt
+                })
+                .OrderByDescending(rvm => rvm.CreatedAt)
+                .ToList();
+            
             var viewModel = new BookDetailVM
             {
-                Book = book,
-                Reviews = reviews,
+                Id = id,
+                Title = book.Title,
+                AuthorId = book.AuthorId,
+                PublisherId = book.PublisherId,
+                CategoryId = book.CategoryId,
+                CoverUrl = book.CoverUrl,
+                Price = book.Price,
+                DiscountPrice = book.DiscountPrice,
+                Description = book.Description,
+                PublishYear = book.PublishYear,
+                ProductCode = book.ProductCode,
+                Quantity = book.Quantity,
+                Reviews = reviewVMs,
                 AverageRating = averageRating
             };
 
@@ -179,9 +204,6 @@ namespace WebBookStore.Areas.Customer.Controllers
         [Authorize]
         public async Task<IActionResult> AddReview(ReviewVM model)
         {
-            if (!ModelState.IsValid)
-                return RedirectToAction("Detail", new { id = model.BookId });
-
             var review = new Review
             {
                 BookId = model.BookId,

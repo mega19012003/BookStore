@@ -18,56 +18,56 @@
                     <div class="col-lg-6">
                         <div class="border rounded position-relative">
                             <a href="#">
-                                <img src="@Model.Book.CoverUrl" class="img-fluid rounded" alt="Image">
+                                <img src="@Model.CoverUrl" class="img-fluid rounded" alt="Image">
                             </a>
 
-                            @if (Model.Book.DiscountPrice.HasValue && Model.Book.DiscountPrice.Value > 0)
+                            @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value > 0)
                             {
                                 <span class="badge bg-danger position-absolute" style="top: 10px; right: 10px;">
-                                    -@Model.Book.DiscountPrice.Value.ToString("0")%
+                                    -@Model.DiscountPrice.Value.ToString("0")%
                                 </span>
                             }
                         </div>
                     </div>
 
                     <div class="col-lg-6">
-                        <h4 class="fw-bold mb-3">@Model.Book.Title</h4>
+                        <h4 class="fw-bold mb-3">@Model.Title</h4>
                         <p class="mb-3">
                             Tác giả:
-                            <a  asp-controller="Book" asp-action="GetBooksByAuthor" asp-route-authorId="@Model.Book.Author?.Id">
-                                @Model.Book.Author?.Name
+                            <a  asp-controller="Book" asp-action="GetBooksByAuthor" asp-route-authorId="@Model.AuthorId">
+                                @Model.AuthorName
                             </a>
                         </p>
                         <p class="mb-3">
                             Thể loại:
-                            <a asp-controller="Book" asp-action="GetBooksByCategory" asp-route-categoryId="@Model.Book.Category?.Id">
-                                @Model.Book.Category?.Name
+                            <a asp-controller="Book" asp-action="GetBooksByCategory" asp-route-categoryId="@Model.CategoryId">
+                                @Model.CategoryName
                             </a>
                         </p>
                         <p class="mb-3">
                             Nhà xuất bản:
-                            <a  asp-controller="Book" asp-action="GetBooksByPublisher" asp-route-publisherId="@Model.Book.Publisher?.Id">
-                                @Model.Book.Publisher?.Name
+                            <a  asp-controller="Book" asp-action="GetBooksByPublisher" asp-route-publisherId="@Model.PublisherId">
+                                @Model.PublisherName
                             </a>
                         </p>
 
-                        <p class="mb-3">Số lượng @Model.Book.Quantity</p>
+                        <p class="mb-3">Số lượng @Model.Quantity</p>
                         <h5 class="fw-bold mb-3">
-                            @if (Model.Book.DiscountPrice.HasValue && Model.Book.DiscountPrice.Value > 0)
+                            @if (Model.DiscountPrice.HasValue && Model.DiscountPrice.Value > 0)
                             {
                                 <div class="mb-2">
                                     <span class="fs-5 fw-bold me-2">
-                                        @Model.Book.FinalPrice.ToString("N0") VND
+                                        @Model.FinalPrice.ToString("N0") VND
                                     </span>
                                     <span class="text-muted text-decoration-line-through">
-                                        @Model.Book.Price.ToString("N0") VND
+                                        @Model.Price.ToString("N0") VND
                                     </span>
                                 </div>
                             }
                             else
                             {
                                 <p class="fs-5 fw-bold mb-2">
-                                    @Model.Book.Price.ToString("N0") VND
+                                    @Model.Price.ToString("N0") VND
                                 </p>
                             }
                         </h5>
@@ -85,7 +85,7 @@
                                 <i class="fa fa-star text-muted"></i>
                             }
                         </div>
-                        <p class="mb-4">@Model.Book.Description</p>
+                        <p class="mb-4">@Model.Description</p>
                         <form asp-area="Customer"
                         asp-controller="Cart"
                         asp-action="AddToCart"
@@ -93,9 +93,9 @@
                         class="d-inline-block">
 
                             <!-- Ẩn field book id -->
-                            <input type="hidden" name="id" value="@Model.Book.Id" />
+                            <input type="hidden" name="id" value="@Model.Id" />
 
-                            <div class="input-group quantity mb-5" style="width: 100px;" data-id="@Model.Book.Id">
+                            <div class="input-group quantity mb-5" style="width: 100px;" data-id="@Model.Id">
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-sm btn-minus rounded-circle bg-light border">
                                         <i class="fa fa-minus"></i>
@@ -158,7 +158,7 @@
                                         <div>
                                             <p class="mb-1 text-muted" style="font-size: 14px;">@review.CreatedAt.ToString("MMMM dd, yyyy")</p>
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h6 class="mb-1">@review.User.Name</h6>
+                                                <h6 class="mb-1">@review.UserName</h6>
                                                 <div class="review-rating ms-3">
                                                     @for (int i = 1; i <= 5; i++)
                                                     {
@@ -194,7 +194,7 @@
                         <h4 class="mb-5 fw-bold">Leave a Reply</h4>
                         <!-- Hidden input to store the rating value -->
                         <input type="hidden" id="Rating" name="Rating" value="0" />
-                        <input type="hidden" name="BookId" value="@Model.Book.Id" />
+                        <input type="hidden" name="BookId" value="@Model.Id" />
                         <div class="col-lg-12">
                             <div class="d-flex justify-content-between py-3 mb-4">
                                 <div class="d-flex align-items-center">
@@ -250,7 +250,7 @@
                 <div class="row g-4 fruite">
                     <div class="col-lg-12">
                         <h4 class="mb-4">Featured products</h4>
-                        @await Component.InvokeAsync("FeaturedBooks", new { authorId = Model.Book.AuthorId, currentBookId = Model.Book.Id, count = 6 })
+                        @await Component.InvokeAsync("FeaturedBooks", new { authorId = Model.AuthorId, currentBookId = Model.Id, count = 6 })
                         <div class="d-flex justify-content-center my-4">
                             <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
                         </div>
@@ -261,12 +261,12 @@
         <h1 class="fw-bold mb-0">Related products</h1>
         <div class="vesitable">
             <div class="owl-carousel vegetable-carousel justify-content-center">
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
-                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.Book.CategoryId, currentBookId = Model.Book.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
+                @await Component.InvokeAsync("RelatedBooks", new { categoryId = Model.CategoryId, currentBookId = Model.Id, count = 1 })
             </div>
         </div>
     </div>

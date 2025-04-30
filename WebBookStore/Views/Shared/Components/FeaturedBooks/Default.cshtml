@@ -1,10 +1,13 @@
-﻿@model List<Book>
+﻿@model List<WebBookStore.ViewModels.FeaturedBookVM>
 
 <div>
     @if (Model != null && Model.Any())
     {
         @foreach (var book in Model)
         {
+            int fullStars = (int)Math.Floor(book.AverageRating);
+            bool hasHalfStar = (book.AverageRating - fullStars) >= 0.5;
+            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
             <div class="d-flex align-items-start mb-4">
                 <!-- Ảnh bên trái -->
                 <div class="rounded" style="width: 100px; height: 180px; overflow: hidden;">
@@ -21,12 +24,20 @@
                         </a>
                     </h6>
 
+                    <!-- rating -->
                     <div class="d-flex mb-2">
-                        <i class="fa fa-star text-secondary"></i>
-                        <i class="fa fa-star text-secondary"></i>
-                        <i class="fa fa-star text-secondary"></i>
-                        <i class="fa fa-star text-secondary"></i>
-                        <i class="fa fa-star"></i>
+                        @for (int i = 0; i < fullStars; i++)
+                        {
+                            <i class="fa fa-star text-warning"></i>
+                        }
+                        @if (hasHalfStar)
+                        {
+                            <i class="fa fa-star-half-alt text-warning"></i>
+                        }
+                        @for (int i = 0; i < emptyStars; i++)
+                        {
+                            <i class="fa fa-star text-muted"></i>
+                        }
                     </div>
 
                     @* Nếu có giảm giá *@
