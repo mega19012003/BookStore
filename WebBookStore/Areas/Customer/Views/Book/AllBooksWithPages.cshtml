@@ -99,29 +99,48 @@
                                             </p>
                                         }
 
-                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                                        </a>
+                                        @if (book.Quantity == 0)
+                                        {
+                                            <div class="position-absolute top-50 start-0 translate-middle-y bg-danger text-white text-center fw-bold py-2" style="width: 100%; z-index: 10; opacity: 0.9;">
+                                                HẾT HÀNG
+                                            </div>
+                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary disabled">
+                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Hết hàng
+                                            </a>
+                                        }
+
+                                        else
+                                        {
+                                            <form asp-area="Customer" asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline-block">
+                                                <!-- Ẩn field book id -->
+                                                <input type="hidden" name="id" value="@book.Id" />
+                                                <input type="hidden" name="quantity" value="1" />
+                                                <!-- Nút submit mới thực sự gọi AddToCart(id, quantity) -->
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fa fa-shopping-cart me-2"></i>Thêm vào giỏ
+                                                </button>
+                                            </form>
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
-                    @if (ViewBag.TotalPages > 1)
+                    @if (Model.TotalPages > 1)
                     {
                         <div class="col-12">
                             <div class="pagination d-flex justify-content-center mt-5">
                                 <!-- Previous Page -->
-                                <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = ViewBag.CurrentPage - 1 })" class="rounded @((ViewBag.CurrentPage <= 1) ? "disabled" : "")">&laquo;</a>
+                                <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = Model.CurrentPage - 1, authorId = Model.AuthorId, categoryId = Model.CategoryId, publisherId = Model.PublisherId })" class="rounded @(Model.CurrentPage <= 1 ? "disabled" : "")">&laquo;</a>
 
                                 <!-- Page Numbers -->
-                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                @for (int i = 1; i <= Model.TotalPages; i++)
                                 {
-                                    <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = i })" class="rounded @(i == ViewBag.CurrentPage ? "active" : "")">@i</a>
+                                    <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = i, authorId = Model.AuthorId, categoryId = Model.CategoryId, publisherId = Model.PublisherId })" class="rounded @(i == Model.CurrentPage ? "active" : "")">@i</a>
                                 }
 
                                 <!-- Next Page -->
-                                <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = ViewBag.CurrentPage + 1 })" class="rounded @((ViewBag.CurrentPage >= ViewBag.TotalPages) ? "disabled" : "")">&raquo;</a>
+                                <a href="@Url.Action("AllBooksWithPages", "Book", new { area = "Customer", page = Model.CurrentPage + 1, authorId = Model.AuthorId, categoryId = Model.CategoryId, publisherId = Model.PublisherId })" class="rounded @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">&raquo;</a>
                             </div>
                         </div>
                     }

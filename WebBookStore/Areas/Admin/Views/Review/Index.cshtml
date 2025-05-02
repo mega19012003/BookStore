@@ -1,0 +1,64 @@
+﻿@model IEnumerable<WebBookStore.Models.Review>
+
+@{
+    ViewData["Title"] = "Danh sách đánh giá và bình luận";
+}
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Danh sách đánh giá và bình luận</h1>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Bình luận</th>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                            <th>Tên sách</th>
+                            <th>Nội dung</th>
+							<th>Đánh giá sao</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var review in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (review.IsDeleted)
+                                    {
+                                        <span class="text-danger">@review.Id (đã xóa mềm)</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@review.Id</span>
+                                    }
+                                </td>
+                                <td>@review.User.Name</td>
+                                <td>@review.User.UserName</td>
+                                <td>@review.Book.Title</td>
+                                <td>@review.Comment</td>
+                                <td>@review.Rating</td>
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger btn-sm">Xóa mềm</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Page level plugins -->
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/js/demo/datatables-demo.js"></script>
+}

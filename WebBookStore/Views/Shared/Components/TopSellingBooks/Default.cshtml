@@ -50,9 +50,27 @@
                                 </p>
                             }
 
-                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                            </a>
+                            @if (book.Quantity == 0)
+
+                            {
+
+                                <div class="position-absolute top-50 start-0 translate-middle-y bg-danger text-white text-center fw-bold py-2" style="width: 100%; z-index: 10; opacity: 0.9;">
+                                    HẾT HÀNG
+                                </div>
+                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary disabled">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Hết hàng
+                                </a>
+
+                            }
+
+                            else
+                            {
+
+                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                    <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                </a>
+
+                            }
                         </div>
                     </div>
                 </div>

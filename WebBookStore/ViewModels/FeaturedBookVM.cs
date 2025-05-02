@@ -12,7 +12,7 @@ namespace WebBookStore.ViewModels
         public string Title { get; set; }
         public decimal Price { get; set; }
         public decimal? DiscountPrice { get; set; }
-
+        public int Quantity { get; set; }
         [NotMapped]
         public decimal FinalPrice
         => DiscountPrice.HasValue

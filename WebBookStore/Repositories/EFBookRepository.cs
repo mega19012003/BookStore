@@ -13,6 +13,7 @@ namespace WebBookStore.Repositories
         public async Task<IEnumerable<Book>> GetAllBooksAsync()
         {
             return await _context.Books
+                .Where(r => !r.IsDeleted)
                 .Include(p => p.Category)
                 .Include(p => p.Author)
                 .Include(p => p.Publisher)
@@ -21,6 +22,7 @@ namespace WebBookStore.Repositories
         public async Task<List<Book>> GetNewestBooksAsync(int count)
         {
             return await _context.Books
+                .Where(r => !r.IsDeleted)
                 .Include(p => p.Category)
                 .Include(p => p.Author)
                 .Include(p => p.Publisher)
@@ -31,6 +33,7 @@ namespace WebBookStore.Repositories
         public async Task<List<Book>> GetTopSellingBooksAsync(int count)
         {
             return await _context.Books
+                .Where(r => !r.IsDeleted)
                 .OrderByDescending(b => b.soldQuantity)
                 .Take(count)
                 .Include(b => b.Category) // nếu cần hiển thị category
@@ -38,7 +41,7 @@ namespace WebBookStore.Repositories
         }
         public async Task<List<Book>> GetRandomBooksAsync(int count)
         {
-            var allBooks = await _context.Books.Include(p=>p.Category).ToListAsync();
+            var allBooks = await _context.Books.Include(p=>p.Category).Where(r => !r.IsDeleted).ToListAsync();
             return allBooks.OrderBy(b => Guid.NewGuid())  // Sắp xếp ngẫu nhiên
                            .Take(count)                  // Lấy 8 sách
                            .ToList();

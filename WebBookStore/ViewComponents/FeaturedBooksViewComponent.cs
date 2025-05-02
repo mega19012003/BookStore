@@ -38,7 +38,8 @@ namespace WebBookStore.ViewComponents
                     Price = book.Price,
                     DiscountPrice = book.DiscountPrice,
                     CoverUrl = book.CoverUrl,
-                    AverageRating = averageRating
+                    AverageRating = averageRating,
+                    Quantity = book.Quantity
                 });
             }
             return View(booksWithRatings);

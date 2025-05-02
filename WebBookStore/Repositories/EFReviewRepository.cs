@@ -12,7 +12,10 @@ namespace WebBookStore.Repositories
         }
         public async Task<IEnumerable<Review>> GetAllReviewsAsync()
         {
-            return await _context.Reviews.ToListAsync();
+            return await _context.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .ToListAsync();
         }
         public async Task<Review> GetReviewByIdAsync(int id)
         {

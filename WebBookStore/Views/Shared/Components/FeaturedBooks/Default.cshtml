@@ -8,6 +8,7 @@
             int fullStars = (int)Math.Floor(book.AverageRating);
             bool hasHalfStar = (book.AverageRating - fullStars) >= 0.5;
             int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
             <div class="d-flex align-items-start mb-4">
                 <!-- Ảnh bên trái -->
                 <div class="rounded" style="width: 100px; height: 180px; overflow: hidden;">
@@ -61,6 +62,21 @@
                         <p class="fs-5 fw-bold mb-2">
                             @book.Price.ToString("N0") VND
                         </p>
+                    }
+
+                    @*Xử lý hết hàng*@
+                    @if (book.Quantity == 0)
+
+                    {
+                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary disabled">
+                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Hết hàng
+                        </a>
+                    }
+					else if (book.Quantity > 0)
+                    {
+                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">
+                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                        </a>
                     }
                 </div>
             </div>

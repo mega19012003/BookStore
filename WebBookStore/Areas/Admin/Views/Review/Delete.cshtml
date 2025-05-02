@@ -1,0 +1,18 @@
+﻿@model WebBookStore.Models.Review
+
+@{
+    ViewData["Title"] = "Xóa thể loại";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning">
+    <p>Bạn có chắc chắn muốn <strong>xóa mềm</strong> bình luận này không?</p>
+    <p><strong>@Model.Comment (@Model.Rating)</strong></p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa mềm</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
