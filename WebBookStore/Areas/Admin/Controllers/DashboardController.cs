@@ -20,28 +20,61 @@ namespace WebBookStore.Areas.Admin.Controllers
         {
             var now = DateTime.Now;
             var startOfWeek = now.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+            // Lấy 10 nhận xét mới nhất
+            var latestReviews = _dbcontext.Reviews
+                .Where(r => !r.IsDeleted)
+                .OrderByDescending(r => r.CreatedAt)
+                .Include(r => r.User) // Load thông tin user
+                .Take(10)
+                .ToList();
 
+            // Lấy 10 đơn hàng mới nhất
+            var latestOrders = _dbcontext.Bills
+                .OrderByDescending(o => o.OrderDate)
+                .Take(10)
+                .ToList();
+            // Lấy doanh thu trong năm
             var yearlyRevenue = _dbcontext.Bills
                 .Where(o => o.OrderDate.Year == now.Year)
                 .Sum(o => (decimal?)o.TotalAmount) ?? 0;
 
-            var monthlyRevenue = _dbcontext.Orders
+            // Lấy doanh thu trong tháng
+            var monthlyRevenue = _dbcontext.Bills
                 .Where(o => o.OrderDate.Month == now.Month && o.OrderDate.Year == now.Year)
                 .Sum(o => (decimal?)o.TotalAmount) ?? 0;
 
-            var weeklyRevenue = _dbcontext.Orders
+            // Lấy doanh thu trong tuần
+            var weeklyRevenue = _dbcontext.Bills
                 .Where(o => o.OrderDate >= startOfWeek && o.OrderDate <= now)
                 .Sum(o => (decimal?)o.TotalAmount) ?? 0;
 
+            // Lấy số lượng đơn hàng đang chờ xử lý
             var pendingOrders = _dbcontext.Bills
-                .Count(o => o.Status == "pending");
+                .Count(o => o.Status == "Pending");
 
+            // Lấy doanh thu theo từng tháng trong năm (12 tháng)
+            var monthlySales = Enumerable.Range(1, 12)
+                .Select(m => new {
+                    Month = m,
+                    Total = _dbcontext.Bills
+                        .Where(b => b.OrderDate.Year == now.Year && b.OrderDate.Month == m)
+                        .Sum(b => (decimal?)b.TotalAmount) ?? 0
+                })
+                .ToList();
+
+            // Truyền dữ liệu vào ViewBag
+            ViewBag.MonthLabels = monthlySales.Select(x => $"Tháng {x.Month}").ToArray();
+            ViewBag.MonthValues = monthlySales.Select(x => x.Total).ToArray();
+
+            // Truyền các giá trị khác vào ViewModel
             var viewModel = new DashboardVM
             {
                 YearlyRevenue = yearlyRevenue,
                 MonthlyRevenue = monthlyRevenue,
                 WeeklyRevenue = weeklyRevenue,
-                PendingOrders = pendingOrders
+                PendingOrders = pendingOrders,
+                LatestReviews = latestReviews,
+                LatestOrders = latestOrders
             };
 
             return View(viewModel);
@@ -51,21 +84,21 @@ namespace WebBookStore.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult GetMonthlySalesData(int? year)
+        [HttpGet]
+        public async Task<IActionResult> GetMonthlySales()
         {
-            int selectedYear = year ?? DateTime.Now.Year;
-
-            var salesData = Enumerable.Range(1, 12)
-                .Select(month => new
+            var salesData = await _dbcontext.Bills
+                .Where(b => b.OrderDate >= new DateTime(DateTime.Now.Year, 1, 1))  
+                .GroupBy(b => new { b.OrderDate.Year, b.OrderDate.Month }) 
+                .Select(g => new
                 {
-                    Month = month,
-                    TotalSold = _dbcontext.BillDetails
-                        .Where(p => p.Bill.OrderDate.Year == selectedYear && p.Bill.OrderDate.Month == month)
-                        .Sum(p => (int?)p.Quantity) ?? 0
+                    YearMonth = $"{g.Key.Month}/{g.Key.Year}",   
+                    TotalSales = g.Sum(b => b.TotalAmount)    
                 })
-                .ToList();
+                .OrderBy(s => s.YearMonth)
+                .ToListAsync();
 
-            return Json(salesData);
+            return Ok(salesData);
         }
 
         public IActionResult GetTopCategories()
