@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebBookStore.Data;
 using WebBookStore.Models;
 using WebBookStore.Repositories;
+using WebBookStore.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<BookDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreDB")));
 
 
+builder.Services.Configure<MomoOption>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
 
 //builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<BookDbContext>();
 
@@ -29,7 +32,6 @@ builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
 builder.Services.AddScoped<IAuthorRepository, EFAuthorRepository>();
 builder.Services.AddScoped<IPublisherRepository, EFPublisherRepository>();
 builder.Services.AddScoped<IReviewRepository, EFReviewRepository>();
-builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 builder.Services.AddScoped<IBillRepository, EFBillRepository>();
 builder.Services.AddScoped<IReviewRepository, EFReviewRepository>();
 

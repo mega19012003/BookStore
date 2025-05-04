@@ -49,7 +49,7 @@ namespace WebBookStore.Areas.Customer.Controllers
             int pageSize = 20;
             int pageNumber = page ?? 1;
 
-            var allBooks = await _bookRepository.GetAllBooksAsync(); // Gồm Author, Category, Publisher
+            var allBooks = await _bookRepository.GetAllBooksAsync(); 
 
             if (authorId.HasValue && authorId.Value != 0)
                 allBooks = allBooks.Where(b => b.AuthorId == authorId).ToList();
@@ -73,7 +73,6 @@ namespace WebBookStore.Areas.Customer.Controllers
                 AuthorId = authorId,
                 CategoryId = categoryId,
                 PublisherId = publisherId,
-                // Ở đây thêm SelectList, với giá trị null -> sẽ chọn “-- Tất cả --”
                 Authors = new SelectList(
                           await _authorRepository.GetAllAuthorsAsync(),
                           "Id", "Name", authorId),
@@ -136,10 +135,8 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             var allBooks = await _bookRepository.GetBooksByPublisherAsync(publisherId);
 
-            // Đếm tổng số sách
             int totalBooks = allBooks.Count();
 
-            // Lấy trang hiện tại
             var books = allBooks
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -162,10 +159,8 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             var allBooks = await _bookRepository.GetBooksByAuthorAsync(authorId);
 
-            // Đếm tổng số sách
             int totalBooks = allBooks.Count();
 
-            // Lấy trang hiện tại
             var books = allBooks
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

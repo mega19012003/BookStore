@@ -16,7 +16,5 @@ namespace WebBookStore.Models
         public string? Address { get; set; }
         public DateOnly? Birthday { get; set; }
         public int Gender { get; set; }  // 0: Nữ, 1: Nam
-
-        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }
