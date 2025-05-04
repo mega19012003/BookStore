@@ -18,7 +18,7 @@ namespace WebBookStore.ViewModels
 
         //[EmailAddress]
         //public string Email { get; set; }
-
+        [Required]
         public string Note { get; set; }
 
         [Required]
